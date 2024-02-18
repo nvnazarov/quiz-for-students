@@ -1,0 +1,227 @@
+* {
+    font-size: 18px;
+    font-weight: 300;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #F1F1F1;
+}
+
+.card {
+    border: 1px solid #999;
+    background-color: white;
+    border-radius: 4px;
+    padding: 16px 32px 32px 16px;
+}
+
+main {
+    padding: 3rem;
+}
+
+ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+ul li {
+    display: inline-block;
+    list-style: none;
+    min-width: 15em;
+}
+
+
+.text-field {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    padding: 16px;
+    background-color: #FFE0E0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+}
+
+form input {
+    margin: 5px;
+    outline: none;
+    padding: 5px;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+form input:focus {
+    border-bottom: 1px solid blue;
+    background-color: #eeeeff;
+    transition-duration: .2s;
+}
+
+form button {
+    margin: 5px;
+}
+
+button[type='submit'] {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: white;
+}
+
+button[type='submit']:hover {
+    background-color: #ddd;
+    transition-duration: .2s;
+}
+
+.box {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+.cont {
+    display: grid;
+    row-gap: 10px;
+    width: 50%;
+    grid-template-columns: 80px 1fr;
+}
+
+.r8 {
+    border-radius: 8px;
+}
+
+.ctr {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.err {
+    border-radius: 4px;
+    background-color: #faa;
+    color: #600;
+    padding: 5px;
+    margin: 5px;
+}
+
+.alt {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #999;
+    transition-duration: .2s;
+}
+
+.alt:hover {
+    color: #11f; 
+}
+
+.h {
+    margin-top: 60px;
+    display: block;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.b {
+    display: inline-block;
+    min-width: 400px;
+    background-color: #F1F1F1;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+.b-head {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    text-align: center;
+    background-color: white;
+    border-bottom: 1px solid #BABABA;
+}
+
+.b-item {
+    border-top: 1px solid #BABABA;
+}
+
+.b-action {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    text-align: center;
+    background-color: #F1F1F1;
+}
+
+.quit {
+    color: #aaa;
+    margin-bottom: 2em;
+    transition-duration: 2ms;
+}
+
+.quit:hover {
+    color: #FFB800;
+}
+
+/* anim */
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 70px;
+    height: 1em;
+}
+.lds-ellipsis div {
+    position: absolute;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: black;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(24px, 0);
+    }
+}

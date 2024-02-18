@@ -1,0 +1,1 @@
+export const apiUrlPrefix = 'http://localhost:8000'
