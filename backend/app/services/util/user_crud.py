@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.schemes import schemes
 from .password import is_valid_password, hash_password
-from .db_ops import create_user
+from .db_ops import create_user, get_user_by_id
 from .token import create_token
 
 
@@ -33,3 +33,8 @@ async def create(data: schemes.UserCreate, db: Session) -> str:
 
 def delete(user_id: int):
     pass
+
+
+async def get(user_id: int, db: Session):
+    user = await get_user_by_id(user_id, db)
+    

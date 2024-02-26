@@ -38,3 +38,12 @@ async def send_email_verification(email: str):
         subtype=MessageType.html)
 
     await mailer.send_message(message)
+    
+
+class EmailService:
+    html_template = """
+<p>Чтобы подтвердить регистрацию на сайте, перейдите по ссылке: <a>{}</a><p> 
+"""
+    
+    async def send_verification_email(recipients):
+        pass

@@ -1,4 +1,4 @@
-from app.models import models
-from app.services.db import engine
+from app.models import base
+from app.db.db import engine
 
-models.Base.metadata.create_all(engine)
+base.Base.metadata.create_all(engine)

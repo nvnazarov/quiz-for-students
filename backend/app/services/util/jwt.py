@@ -3,12 +3,12 @@ from typing import Any, MutableMapping
 from datetime import datetime, timedelta, timezone
 
 
-class JWTContext:
+class JWTContext():
     def __init__(self, key: str, algorithm: str):
         self.key = key
         self.algorithm = algorithm
 
-    def encode(self, claims: MutableMapping[str, Any]):
+    def encode(self, claims: MutableMapping[str, Any]) -> str:
         return jwt.encode(claims, self.key, self.algorithm)
 
     def decode(self, token) -> dict[str, Any]:

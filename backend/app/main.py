@@ -1,25 +1,24 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import users, groups, quizzes
+from app.api.routers import all_routers
 
-app = FastAPI()
-
-origins = [
-    "http://localhost:3000",  # frontend
-]
+app = FastAPI(
+    title="Quiz app"
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[
+        "http://localhost:3000",  # frontend
+    ],
     allow_credentials=False,
     allow_methods=["GET", "POST"],
     allow_headers=["*"])
 
-app.include_router(users.router)
-app.include_router(groups.router)
-app.include_router(quizzes.router)
+for router in all_routers:
+    app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app="app.main:app", reload=True)

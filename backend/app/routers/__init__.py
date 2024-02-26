@@ -1,1 +1,0 @@
-# Routers are proxies between client and server logic
