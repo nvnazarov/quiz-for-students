@@ -1,11 +1,13 @@
-const QuizCard = ({title, qCount, maxPoints, link}) => {
+import {Link} from 'react-router-dom';
+
+
+const QuizCard = ({id, name, type}) => {
     return (
-        <a href={link}>
-            {title}
-            {qCount} вопросов
-            {maxPoints} баллов
-        </a>
+        <Link to={`/constructor/${type}?q=${id}`}>
+            Quiz {id}: {name}
+        </Link>
     );
 }
+
 
 export default QuizCard;

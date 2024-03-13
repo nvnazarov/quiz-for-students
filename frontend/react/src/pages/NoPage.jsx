@@ -1,11 +1,17 @@
+import {Link} from "react-router-dom";
+
+
 const NoPage = () => {
     return (
-        <div className='card'>
-            404
-
-            <a href='/login'>Login</a>
-        </div>
+        <>
+            This page does not exist.
+            <br/>
+            <Link to="/">Home</Link>
+            <br/>
+            <Link to="/profile">Profile</Link>
+        </>
     );
 }
+
 
 export default NoPage;

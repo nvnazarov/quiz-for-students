@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.schemas.users import UserCreateSchema, UserRegisterSchema, UserAuthenticateSchema
 from app.repositories.users import AbstractUserRepository
-from .util.jwt import JWTContext, get_expire_time
+from app.services.util.jwt import JWTContext, get_expire_time
 
 
 class UsersService:
@@ -85,6 +85,15 @@ class UsersService:
                 "sub": str(db_user.id),
                 "exp": get_expire_time(30)
             })
+    
+    
+    async def get_user_info(self, user_id: int):
+        db_user = await self.repository.get_user_by_id(user_id)
+        return {
+            "id": db_user.id,
+            "name": db_user.name,
+            "email": db_user.email,
+        }
         
         
     def get_user_id_from_token(self, token: str) -> int:
@@ -104,9 +113,3 @@ class UsersService:
         password = password.lower()
         return len(password) >= 8 and any([d in password for d in '0123456789']) and \
             any([s in password for s in 'abcdefghijklmnopqrstuvwxyz'])
-            
-            
-    async def get_user_profile(self, user_id: int) -> dict[str]:
-        return {
-            "ok": 200
-        }

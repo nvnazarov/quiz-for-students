@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from .dependencies import UsersServiceDep, get_current_user_id
+from .dependencies import UsersServiceDependency, get_current_user_id
 from app.schemas.users import UserRegisterSchema, UserAuthenticateSchema
 
 router = APIRouter(
@@ -17,33 +17,34 @@ def activate_user():
     pass
 
 
-@router.post("/")
+@router.post("/register")
 async def register_user(
     user: UserRegisterSchema,
-    users_service: UsersServiceDep
+    users_service: UsersServiceDependency
 ) -> str:
     
     return await users_service.register(user)
 
 
-@router.post("/auth")
+@router.post("/login")
 async def authenticate_user(
     user: UserAuthenticateSchema,
-    users_service: UsersServiceDep
+    users_service: UsersServiceDependency
 ) -> str:
     
     token = await users_service.authenticate(user)
     return token
 
 
-@router.get("/")
-async def get_current_user_data(
-    user_id: Annotated[int, Depends(get_current_user_id)],
-    users_service: UsersServiceDep
+@router.get("/me")
+async def get_user_info(
+    users_service: UsersServiceDependency,
+    user_id: int = Depends(get_current_user_id),
 ):
     
-    return await users_service.get_user_profile(user_id) 
-
+    info = await users_service.get_user_info(user_id)
+    return info
+    
 
 @router.patch("/")
 async def change_name():

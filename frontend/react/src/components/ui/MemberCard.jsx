@@ -1,10 +1,9 @@
-const MemberCard = ({name, avatarUrl}) => {
+const MemberCard = (props) => {    
     return (
-        <>
-            <img src={avatarUrl}></img>
-            {name}
-        </>
-    );
+        <div>
+            Member {props.id}: {props.name} <button onClick={() => props.ban(props.id)}>ban</button>
+        </div>
+    )
 }
 
-export default MemberCard;
+export default MemberCard

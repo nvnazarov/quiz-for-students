@@ -10,3 +10,8 @@ class QuizCreateSchema:
 class QuizUpdateSchema:
     name: str
     data: dict[str]
+    
+    
+class QuizDeleteSchema:
+    user_id: int
+    name: str

@@ -9,5 +9,5 @@ class Group(Base):
 
     id = Column(Integer, primary_key=True)
     admin_id = Column(Integer, ForeignKey("users.id"))
-    name = Column(String(100), nullable=False)
-    creation_date = Column(DATE, default="current_date")
+    name = Column(String(100), unique=True, nullable=False)
+    creation_date = Column(DATE)

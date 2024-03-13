@@ -18,8 +18,8 @@ class AbstractUserRepository(ABC):
     @abstractmethod
     async def get_user_by_id(self, id: int) -> User:
         raise NotImplementedError
-    
-    
+
+
     @abstractmethod
     async def get_user_profile(self, id: int):
         raise NotImplementedError

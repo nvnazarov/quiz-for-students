@@ -15,6 +15,11 @@ def get_game_result():
     pass
 
 
+@router.post("/")
+def start_game():
+    pass
+
+
 @router.websocket("/{id}")
 def connect_to_game(websocket: WebSocket):
     # TODO:

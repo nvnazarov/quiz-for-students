@@ -1,4 +1,4 @@
-* {
+/* * {
     font-size: 18px;
     font-weight: 300;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -8,7 +8,7 @@
 }
 
 body {
-    background-color: #F1F1F1;
+    background-color: white;
 }
 
 .card {
@@ -20,18 +20,6 @@ body {
 
 main {
     padding: 3rem;
-}
-
-ul {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-}
-
-ul li {
-    display: inline-block;
-    list-style: none;
-    min-width: 15em;
 }
 
 
@@ -169,7 +157,6 @@ button[type='submit']:hover {
     color: #FFB800;
 }
 
-/* anim */
 .lds-ellipsis {
     display: inline-block;
     position: relative;
@@ -225,3 +212,73 @@ button[type='submit']:hover {
         transform: translate(24px, 0);
     }
 }
+
+
+.tc-frame {
+    margin: 70px 100px;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.tc-q-cont {
+    display: inline-block;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+.tc-q-vars {
+    display: flex;
+    flex-direction: column;
+}
+
+.tc-q-vars span {
+    padding: 5px;
+    color: black;
+    transition-duration: 0.15s;
+}
+
+.tc-q-vars span:hover {
+    color: #FFB800;
+}
+
+.tc-q-card {
+    display: grid;
+    grid-template-columns: 1fr 30px;
+    grid-template-rows: auto;
+    grid-template-areas:
+        "type actions"
+        "props actions";
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #BABABA;
+}
+
+.tc-q-card-type {
+    grid-area: type;
+}
+
+.tc-q-card-props {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-items: flex-start;
+    grid-area: props;
+}
+
+.tc-q-card-actions {
+    grid-area: actions;
+}
+
+.tc-q-drag-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    right: 0px;
+}
+
+.text-edit {
+    border: 1px dashed black;
+} */

@@ -1,6 +1,6 @@
 from app.schemas.quizzes import QuizCreateSchema
 
 
-class QuizzesService:
+class QuizService:
     def create_quiz(quiz: QuizCreateSchema):
         pass
