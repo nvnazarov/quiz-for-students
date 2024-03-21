@@ -41,5 +41,5 @@ class SqlQuizRepository(QuizRepository):
         raise NotImplementedError
 
 
-    async def delete_quiz(quiz_id: int):
+    async def delete_quiz(self, quiz_id: int):
         raise NotImplementedError

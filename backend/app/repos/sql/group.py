@@ -52,7 +52,7 @@ class SqlGroupRepository(GroupRepository):
     async def add_group_member(self, group_id: int, user_id: int) -> Member:
         async with async_session_maker() as session:
             db_member = Member(group_id=group_id,
-                               member_id=user_id)
+                               user_id=user_id)
 
             session.add(db_member)
             await session.commit()

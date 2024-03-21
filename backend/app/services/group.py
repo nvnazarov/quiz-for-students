@@ -5,6 +5,7 @@ from app.security.token import TokenContext
 from app.repos.group import GroupRepository
 from app.dto.group import GroupCreateDto
 from app.dto.group import GroupDto
+from app.dto.group import GroupJoinDto
 from app.dto.group import to_group_dto
 from app.dto.member import MemberDto
 from app.dto.member import MemberOnlyDto
@@ -64,14 +65,23 @@ class GroupService:
         return members
 
 
-    async def join_group_by_token(self, user_id: int, token: str):
+    async def join_group_by_token(self, dto: GroupJoinDto):
         try:
-            payload = self.token_context.decode(token)
+            payload = self._token_context.decode(dto.token)
         except:
-            ...
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid token")
             
         group_id = int(payload["sub"])
-        await self._repo.add_group_member(group_id, user_id)
+        
+        db_group = await self._repo.find_by_id(group_id)
+        
+        if not db_group:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="group does not exist") 
+        
+        if db_group.admin_id == dto.user_id:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="admin cannot join his group")
+        
+        await self._repo.add_group_member(group_id, dto.user_id)
 
 
     async def get_group_name(self, group_id: int):
@@ -79,7 +89,15 @@ class GroupService:
         return db_group.name
 
 
-    async def get_group_token(self, group_id: int):
+    async def get_group_token(self, group_id: int, admin_id: int) -> str:
+        db_group = await self._repo.find_by_id(group_id)
+        
+        if not db_group:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="group not found")
+        
+        if db_group.admin_id != admin_id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="not an admin")
+        
         return self._token_context.encode({ "sub": str(group_id) })
 
 

@@ -21,5 +21,5 @@ class QuizRepository(ABC):
 
 
     @abstractmethod
-    async def delete_quiz(quiz_id: int):
+    async def delete_quiz(self, quiz_id: int):
         raise NotImplementedError

@@ -38,12 +38,17 @@ async def get_group_members(id: int, user_id: int = Depends(get_current_user_id)
     return members
 
 
-
 @router.post("/join/{group_token}")
 async def join_group(group_token: str, user_id: int = Depends(get_current_user_id)):
     dto = GroupJoinDto(user_id=user_id, token=group_token)
     await get_group_service().join_group_by_token(dto)
     return Response(status_code=status.HTTP_200_OK)
+
+
+@router.post("{id}/token")
+async def join_group(id: int, user_id: int = Depends(get_current_user_id)):
+    token = await get_group_service().get_group_token(id, user_id)
+    return token
 
 
 @router.get("/{id}/name")
