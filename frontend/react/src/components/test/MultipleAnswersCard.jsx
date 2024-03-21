@@ -1,13 +1,13 @@
-import {useState} from 'react';
+import { useState } from 'react';
 
 
-const SingleAnswerCard = ({id, data, setData, onDelete}) => {
+const MultipleAnswersCard = ({ id, data, setData, onDelete }) => {
     const [expanded, setExpanded] = useState(false);
 
     if (expanded) {
         return (
             <>
-                Один вариант ответа
+                Несколько ответов
 
                 <br/>Время: <input type='number' value={data.time} onChange={(e) => setData(id, {...data, time: e.target.value})} />
                 <br/>Очки: <input type='number' value={data.points} onChange={(e) => setData(id, {...data, points: e.target.value})} />
@@ -25,7 +25,7 @@ const SingleAnswerCard = ({id, data, setData, onDelete}) => {
 
     return (
         <>
-            Один вариант ответа, {data.time} сек, {data.points} очков
+            Несколько ответов, {data.time} сек, {data.points} очков
             
             <br/>
 
@@ -33,8 +33,8 @@ const SingleAnswerCard = ({id, data, setData, onDelete}) => {
 
             <button onClick={() => setExpanded(true)}>Развернуть</button>
         </>
-    );
+    );    
 }
 
 
-export default SingleAnswerCard;
+export default MultipleAnswersCard;

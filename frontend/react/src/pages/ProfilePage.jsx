@@ -25,9 +25,9 @@ const ProfilePage = () => {
             }
         };
 
-        const response = await fetch(`${apiUrl}/groups/create/${newGroupName}`, fetchRequest);
+        const response = await fetch(`${apiUrl}/groups/create/${newGroupName}`, fetchRequest).catch(() => {});
 
-        if (!response.ok) {
+        if (response === undefined || !response.ok) {
             // TODO
         }
 

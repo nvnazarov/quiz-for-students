@@ -1,9 +1,9 @@
-from .users import router as users_router
-from .groups import router as groups_router
-from .quizzes import router as quizzes_router
+from app.api.user import router as user_router
+from app.api.group import router as group_router
+from app.api.quiz import router as quiz_router
 
 all_routers = [
-    users_router,
-    groups_router,
-    quizzes_router,
+    user_router,
+    group_router,
+    quiz_router,
 ]

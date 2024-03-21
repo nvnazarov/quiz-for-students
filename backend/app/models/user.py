@@ -1,12 +1,15 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+
 from .base import Base
 
 
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
-    disabled = Column(Boolean, default=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100))
+    email: Mapped[str] = mapped_column(String(255), unique=True)
+    hashed_password: Mapped[str] = mapped_column(String)
+    active: Mapped[bool] = mapped_column(default=True)

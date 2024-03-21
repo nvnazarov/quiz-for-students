@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
-from app.schemas.result import DBResultCreateSchema
 
 
 class ResultRepository(ABC):
     @abstractmethod
     def get_results():
-        pass
+        raise NotImplementedError
     
     
     @abstractmethod
-    def create_result(result: DBResultCreateSchema):
-        pass
+    def create_result():
+        raise NotImplementedError

@@ -3,6 +3,7 @@ import { apiUrl } from '../config';
 
 
 const useGroupData = (token, groupId) => {
+    const [name, setName] = useState(null);
     const [members, setMembers] = useState(null);
     const [history, setHistory] = useState(null);
 
@@ -12,10 +13,22 @@ const useGroupData = (token, groupId) => {
         }
     };
 
-    const loadMembers = async () => {
-        const response = await fetch(`${apiUrl}/groups/${groupId}/members`, fetchRequest);
+    const loadName = async () => {
+        const response = await fetch(`${apiUrl}/groups/${groupId}/name`, fetchRequest).catch(() => {});
         
-        if (!response.ok) {
+        if (response === undefined || !response.ok) {
+            setName(undefined);
+            return;
+        }
+
+        const json = await response.json();
+        setName(json);
+    }
+
+    const loadMembers = async () => {
+        const response = await fetch(`${apiUrl}/groups/${groupId}/members`, fetchRequest).catch(() => {});
+        
+        if (response === undefined || !response.ok) {
             setMembers(undefined);
             return;
         }
@@ -25,9 +38,9 @@ const useGroupData = (token, groupId) => {
     }
 
     const loadHistory = async () => {
-        const response = await fetch(`${apiUrl}/groups/${groupId}/history`, fetchRequest);
+        const response = await fetch(`${apiUrl}/groups/${groupId}/history`, fetchRequest).catch(() => {});
         
-        if (!response.ok) {
+        if (response === undefined || !response.ok) {
             setHistory(undefined);
             return;
         }
@@ -38,6 +51,7 @@ const useGroupData = (token, groupId) => {
 
     useEffect(() => {
 
+        loadName();
         loadMembers();
         loadHistory();
 
@@ -45,9 +59,11 @@ const useGroupData = (token, groupId) => {
 
     return [
         {
+            name: name,
             members: members,
             history: history,
         },
+        loadName,
         loadMembers,
         loadHistory,
     ];

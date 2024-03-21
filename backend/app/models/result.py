@@ -1,15 +1,18 @@
-from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.dialects.postgresql import DATE, JSONB
+from datetime import datetime
+from typing import Any
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 from .base import Base
 
 
-class Result(Base):
-    """Table with games results."""
-    
+class Result(Base):   
     __tablename__ = "results"
     
-    id = Column(Integer, primary_key=True)
-    quiz_id = Column(Integer, ForeignKey("quizzes.id"))
-    date = Column(DATE, nullable=False, default="current_date")
-    scores = Column(JSONB, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    group_id: Mapped[int] = mapped_column(ForeignKey("groups.id"))
+    quiz_id: Mapped[int] = mapped_column(ForeignKey("quizzes.id"))
+    date: Mapped[datetime] = mapped_column(default="current_date")
+    scores: Mapped[dict[str, Any]] = mapped_column()

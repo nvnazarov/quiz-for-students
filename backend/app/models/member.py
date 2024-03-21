@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 from .base import Base
 
@@ -6,6 +8,7 @@ from .base import Base
 class Member(Base):
     __tablename__ = "members"
 
-    id = Column(Integer, primary_key=True)
-    group_id = Column(Integer, ForeignKey("groups.id"))
-    member_id = Column(Integer, ForeignKey("users.id"))
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    group_id: Mapped[int] = mapped_column(ForeignKey("groups.id"))
+    banned: Mapped[bool] = mapped_column(default=False)

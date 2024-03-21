@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const QuizConstructor = ({ onFinish }) => {
+const QuizConstructorPage = ({ onFinish }) => {
     const [commonData, setCommonData] = useState(
         {
             rows: 5,
@@ -54,4 +54,4 @@ const QuizConstructor = ({ onFinish }) => {
     )
 }
 
-export default QuizConstructor
+export default QuizConstructorPage;

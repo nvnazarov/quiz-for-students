@@ -1,36 +1,40 @@
+import os
 from typing import Annotated
 
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Header, HTTPException, status
+from passlib.context import CryptContext
 
-from app.services.users import UsersService
+from app.services.users import UserService
 from app.services.group import GroupService
-from app.repositories.impl import SQLAlchemyUserRepository, SQLAlchemyGroupRepository
+from app.services.quiz import QuizService
+from app.repos.sql.user import SqlUserRepository
+from app.repos.sql.group import SqlGroupRepository
+from app.repos.sql.quiz import SqlQuizRepository
+from app.security.jwt import JwtContext
 
 
-def get_users_service() -> UsersService:
-    return UsersService(SQLAlchemyUserRepository())
+_user_service = UserService(SqlUserRepository(),
+                            JwtContext(key=os.getenv("QFS_USER_TOKEN_KEY"), algorithm=os.getenv("QFS_USER_TOKEN_ALGO")),
+                            CryptContext(schemes=["bcrypt"]))
+
+_group_service = GroupService(SqlGroupRepository(),
+                              JwtContext(key=os.getenv("QFS_GROUP_TOKEN_KEY"), algorithm=os.getenv("QFS_GROUP_TOKEN_ALGO")))
+
+_quiz_service = QuizService(SqlQuizRepository())
+
+
+def get_user_service() -> UserService:
+    return _user_service
 
 
 def get_group_service() -> GroupService:
-    return GroupService(SQLAlchemyGroupRepository())
+    return _group_service
 
 
-UsersServiceDependency = Annotated[UsersService, Depends(get_users_service)]
-GroupServiceDependency = Annotated[GroupService, Depends(get_group_service)]
+def get_quiz_service() -> QuizService:
+    return _quiz_service
 
 
-async def get_current_user_id(
-    users_service: UsersServiceDependency,
-    token: Annotated[str | None, Header()] = None,
-) -> int:
-    
-    if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    
-    try:
-        user_id = users_service.get_user_id_from_token(token)
-    except Exception as e:
-        print(e)
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED) 
-    
+async def get_current_user_id(token: Annotated[str | None, Header()] = None) -> int:
+    user_id = get_user_service().get_user_id_from_token(token)
     return user_id

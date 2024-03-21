@@ -1,7 +1,8 @@
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
-from .jwt import JWTContext, get_expire_time
 
-jwt_context = JWTContext(
+from app.security.jwt import JwtContext
+
+jwt_context = JwtContext(
     key="asdf",
     algorithm="HSA256"
 )

@@ -15,9 +15,9 @@ const useProfileData = (token) => {
     };
 
     const loadUser = async () => {
-        const response = await fetch(`${apiUrl}/users/me`, fetchRequest);
+        const response = await fetch(`${apiUrl}/users/me`, fetchRequest).catch(() => {});
         
-        if (!response.ok) {
+        if (response === undefined || !response.ok) {
             setUser(undefined);
             return;
         }
@@ -27,9 +27,9 @@ const useProfileData = (token) => {
     }
 
     const loadGroups = async () => {
-        const response = await fetch(`${apiUrl}/groups/all`, fetchRequest);
+        const response = await fetch(`${apiUrl}/groups/all`, fetchRequest).catch(() => {});
         
-        if (!response.ok) {
+        if (response === undefined || !response.ok) {
             setGroups(undefined);
             return;
         }
@@ -39,9 +39,9 @@ const useProfileData = (token) => {
     }
 
     const loadMyGroups = async () => {
-        const response = await fetch(`${apiUrl}/groups/my`, fetchRequest);
+        const response = await fetch(`${apiUrl}/groups/my`, fetchRequest).catch(() => {});
         
-        if (!response.ok) {
+        if (response === undefined || !response.ok) {
             setMyGroups(undefined);
             return;
         }
@@ -51,9 +51,9 @@ const useProfileData = (token) => {
     }
 
     const loadQuizzes = async () => {
-        const response = await fetch(`${apiUrl}/quizzes/my`, fetchRequest);
+        const response = await fetch(`${apiUrl}/quizzes/my`, fetchRequest).catch(() => {});
         
-        if (!response.ok) {
+        if (response === undefined || !response.ok) {
             setQuizzes(undefined);
             return;
         }
