@@ -11,6 +11,9 @@ from app.models.member import Member
 from app.models.user import User
 from app.dto.member import MemberDto
 from app.dto.member import to_member_dto
+from app.models.result import Result
+from app.dto.result import ResultDto
+from app.dto.result import to_result_dto
 
 
 class SqlGroupRepository(GroupRepository):
@@ -82,3 +85,10 @@ class SqlGroupRepository(GroupRepository):
     async def find_by_id(self, group_id: int) -> Group | None:
         async with async_session_maker() as session:
             return await session.get(Group, group_id)
+    
+    
+    async def get_history(self, group_id: int) -> list[ResultDto]:
+        async with async_session_maker() as session:
+            stmt = select(Result).where(Result.group_id == group_id);
+            result = await session.execute(stmt)
+            return [to_result_dto(row[0]) for row in result]

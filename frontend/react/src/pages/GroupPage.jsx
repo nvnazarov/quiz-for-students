@@ -2,7 +2,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useGroupData } from '../hooks/Group.jsx';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext.jsx';
-import QRCode from 'react-qr-code';
 
 
 const GroupPage = () => {
@@ -10,7 +9,7 @@ const GroupPage = () => {
     const [token] = useContext(UserContext);
     const [data, loadName, loadMembers, loadHistory] = useGroupData(token, id);
 
-    const memberMapper = (member) => <li key={member.id}>{member.name} <button>ban</button></li>;
+    const memberMapper = (member) => <li key={member.id}>{member.name}</li>;
     const membersCards = data.members ? data.members.map(memberMapper) : data.members;
 
     const historyMapper = (h) => <li key={h.id}>{h.name} {h.date} <Link to={`/history/${h.id}`}>h.id</Link></li>;
@@ -18,7 +17,7 @@ const GroupPage = () => {
 
     return (
         <>
-            <Link to='/profile'>Назад</Link>
+            <Link to='/me/groups'>Назад</Link>
 
             <hr/>
 
@@ -45,7 +44,11 @@ const GroupPage = () => {
             <hr/>
 
             <h3>Текущий квиз</h3>
-
+            {
+                data.game === null ? <>...</> :
+                data.game === undefined ? <>Не удалось загрузить текущую игру</> :
+                data.game
+            }
             <hr/>
 
             <h3>Прошедшие квизы</h3>
@@ -57,12 +60,6 @@ const GroupPage = () => {
                     historyCards
                 }    
             </ul>
-
-            <hr/>
-
-            Скопируйте ссылку {'http://localhost:3000/groups/join/0'} или <br/>
-
-            <QRCode value='http://localhost:3000/groups/join/0' size={128} />
             
         </>
     );

@@ -10,8 +10,7 @@ from app.dto.group import to_group_dto
 from app.dto.member import MemberDto
 from app.dto.member import MemberOnlyDto
 from app.dto.member import to_member_only_dto
-from app.models.group import Group
-from app.models.member import Member
+from app.dto.result import ResultDto
 
 
 class GroupService:
@@ -79,14 +78,21 @@ class GroupService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="group does not exist") 
         
         if db_group.admin_id == dto.user_id:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="admin cannot join his group")
+            raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="admin cannot join his group")
         
-        await self._repo.add_group_member(group_id, dto.user_id)
+        try:
+            await self._repo.add_group_member(group_id, dto.user_id)
+        except IntegrityError:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT)
 
 
-    async def get_group_name(self, group_id: int):
-        db_group = await self._repo.get_group_by_id(group_id)
-        return db_group.name
+    async def get_group_info(self, group_id: int, user_id: int) -> GroupDto:
+        db_group = await self._repo.find_by_id(group_id)
+        
+        if not db_group:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="group does not exist")
+        
+        return to_group_dto(db_group)
 
 
     async def get_group_token(self, group_id: int, admin_id: int) -> str:
@@ -99,6 +105,21 @@ class GroupService:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="not an admin")
         
         return self._token_context.encode({ "sub": str(group_id) })
+
+
+    async def get_history(self, group_id: int, user_id: int) -> list[ResultDto]:
+        db_group = await self._repo.find_by_id(group_id)
+        
+        if not db_group:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="group not found")
+        
+        members = await self._repo.get_group_members(group_id)
+        
+        if db_group.admin_id != user_id and not any(map(lambda m: m.id == user_id and not m.banned, members)):
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="not a member or banned")
+        
+        history = await self._repo.get_history(group_id)
+        return history
 
 
     async def ban_user(self, group_id: int, user_id: int, admin_id: int) -> MemberOnlyDto:

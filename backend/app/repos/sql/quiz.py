@@ -9,11 +9,10 @@ from app.dto.quiz import QuizCreateDto
 class SqlQuizRepository(QuizRepository):
     async def create_test(self, quiz: QuizCreateDto) -> Quiz:    
         async with async_session_maker() as session: 
-            db_test = Quiz(
-                name=quiz.name,
-                owner_id=quiz.owner_id,
-                type="test",
-                data=quiz.data)
+            db_test = Quiz(name=quiz.name,
+                           owner_id=quiz.owner_id,
+                           type="test",
+                           data=quiz.data)
 
             session.add(db_test)
             await session.commit()
@@ -24,11 +23,10 @@ class SqlQuizRepository(QuizRepository):
 
     async def create_quiz(self, quiz: QuizCreateDto) -> Quiz:        
         async with async_session_maker() as session: 
-            db_quiz = Quiz(
-                name=quiz.name,
-                owner_id=quiz.owner_id,
-                type="quiz",
-                data=quiz.data)
+            db_quiz = Quiz(name=quiz.name,
+                           owner_id=quiz.owner_id,
+                           type="quiz",
+                           data=quiz.data)
 
             session.add(db_quiz)
             await session.commit()
@@ -37,9 +35,13 @@ class SqlQuizRepository(QuizRepository):
         return db_quiz
 
 
-    async def update_quiz(self, owner_id: int, name: str, data: dict[str]):
-        raise NotImplementedError
+    async def find_all_owned_by(self, user_id: int) -> list[Quiz]:
+        async with async_session_maker() as session:
+            stmt = select(Quiz).where(Quiz.owner_id == user_id)
+            result = await session.execute(stmt)
+            return [row[0] for row in result]
 
 
-    async def delete_quiz(self, quiz_id: int):
-        raise NotImplementedError
+    async def find_by_id(self, id: int) -> Quiz:
+        async with async_session_maker() as session:
+            return await session.get(Quiz, id)

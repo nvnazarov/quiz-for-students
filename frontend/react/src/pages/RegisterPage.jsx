@@ -1,18 +1,18 @@
 import { useState, useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
-import { apiUrl } from '../config.js';
 import { Link, Navigate } from 'react-router-dom';
+import { register } from '../api/User.js';
+import SubmitButton from '../components/ui/SubmitButton';
+import TextField from '../components/ui/TextField';
+import PasswordField from '../components/ui/PasswordField';
+import Notification from '../components/ui/Notification';
 
 
 const RegisterPage = () => {
     const [token, setToken] = useContext(UserContext);
-
-    const [form, setForm] = useState({
-        name: '',
-        email: '',
-        password: '',
-    });
-
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [formInfo, setFormInfo] = useState({
         hint: null,
         isSended: false
@@ -21,86 +21,42 @@ const RegisterPage = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        if (form.name === '') {
-            setFormInfo({ hint: 'Укажите имя' });
-            e.target[0].focus();
-            return;
-        }
-
-        if (form.email === '') {
-            setFormInfo({ hint: 'Укажите почту' });
-            e.target[1].focus();
-            return;
-        }
-
-        if (form.password === '') {
-            setFormInfo({ hint: 'Укажите пароль' });
-            e.target[2].focus();
-            return;
-        }
-
-        setFormInfo({ isSended: true, hint: null });
-
-        let token = await fetch(
-            `${apiUrl}/users/register`,
-            {
-                method: 'POST',
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: form.name,
-                    email: form.email,
-                    password: form.password
-                })
-            })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-
-            if (response.status === 400) {
-                setFormInfo({ isSended: false, hint: 'Почта уже используется' });
-            }
-
-            return null;
-        })
-        .catch(error => {
-            setFormInfo({ isSended: false, hint: 'Попробуйте в другой раз' });
-            return null;
-        })
-
-        if (token) {
-            setToken(token);
+        setFormInfo({isSended: true, hint: null});
+        const response = await register({name, email, password});
+        if (response.token) {
+            setToken(response.token);
+        } else {
+            setFormInfo({isSended: false, hint: response.hint});
         }
     }
 
     if (token) {
-        return <Navigate to='/profile'/>;
+        return <Navigate to='/me/profile'/>;
     }
 
     return (
         <>
-            <form onSubmit={ onSubmit }>
-                <input name='name' type='text' placeholder='Имя' value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <form className='Centered Box' onSubmit={onSubmit}>
+                <div className='List Mid'>
+                    <h1>Регистрация</h1>
 
-                <input name='email' type='text' placeholder='Почта' value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })} />
-
-                <input name='password' type='password' placeholder='Пароль' value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })} />
-
-                <button name='submit' type='submit' disabled={formInfo.isSended}>Создать</button>
-
-                { formInfo.hint && <span className='err'>{formInfo.hint}</span> }
+                    <TextField name='name' placeholder='Имя' text={name} setText={setName} />
+                    <TextField name='email' placeholder='Почта' text={email} setText={setEmail} />
+                    <PasswordField name='password' placeholder='Пароль' text={password} setText={setPassword} />
+                    <div>
+                        <SubmitButton isLoading={formInfo.isSended} title='Создать' />
+                    </div>
+                    <hr/>
+                    <Link to="/login">Войти в аккаунт</Link>
+                </div>
             </form>
 
-            <hr/>
-
-            <Link to='/login'>Войти</Link>
+            {
+                formInfo.hint && <Notification message={formInfo.hint} />
+            }
         </>
     )
 }
+
 
 export default RegisterPage;

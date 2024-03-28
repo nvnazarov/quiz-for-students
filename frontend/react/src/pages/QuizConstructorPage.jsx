@@ -33,14 +33,6 @@ const QuizConstructorPage = ({ onFinish }) => {
         }
     }
 
-    const onFieldResize = () => {
-        
-    }
-
-    const getQuestionData = (i, j) => {
-
-    }
-
     const questionsCells = questionsData.map((data) => <div>data.cost</div>)
 
     return (

@@ -4,8 +4,11 @@ import { apiUrl } from '../config';
 
 const useGroupData = (token, groupId) => {
     const [name, setName] = useState(null);
+    const [game, setGame] = useState('loading');
     const [members, setMembers] = useState(null);
     const [history, setHistory] = useState(null);
+    const [quizzes, setQuizzes] = useState(null);
+    const [groupToken, setGroupToken] = useState(null); 
 
     const fetchRequest = {
         headers: {
@@ -14,7 +17,7 @@ const useGroupData = (token, groupId) => {
     };
 
     const loadName = async () => {
-        const response = await fetch(`${apiUrl}/groups/${groupId}/name`, fetchRequest).catch(() => {});
+        const response = await fetch(`${apiUrl}/groups/${groupId}`, fetchRequest).catch(() => {});
         
         if (response === undefined || !response.ok) {
             setName(undefined);
@@ -22,7 +25,7 @@ const useGroupData = (token, groupId) => {
         }
 
         const json = await response.json();
-        setName(json);
+        setName(json.name);
     }
 
     const loadMembers = async () => {
@@ -37,6 +40,23 @@ const useGroupData = (token, groupId) => {
         setMembers(json);
     }
 
+    const loadGame = async () => {
+        const response = await fetch(`${apiUrl}/games/${groupId}`, fetchRequest).catch(() => {});
+        
+        if (response === undefined) {
+            setGame(undefined);
+            return;
+        }
+
+        if (!response.ok) {
+            setGame(null);
+            return;
+        }
+
+        const json = await response.json();
+        setGame(json);
+    }
+
     const loadHistory = async () => {
         const response = await fetch(`${apiUrl}/groups/${groupId}/history`, fetchRequest).catch(() => {});
         
@@ -49,23 +69,54 @@ const useGroupData = (token, groupId) => {
         setHistory(json);
     }
 
+    const loadQuizzes = async () => {
+        const response = await fetch(`${apiUrl}/quizzes/my`, fetchRequest).catch(() => {});
+        
+        if (response === undefined || !response.ok) {
+            setQuizzes(undefined);
+            return;
+        }
+
+        const json = await response.json();
+        setQuizzes(json);
+    }
+
+    const loadGroupToken = async () => {
+        const response = await fetch(`${apiUrl}/groups/${groupId}/token`, fetchRequest).catch(() => {});
+        
+        if (response === undefined || !response.ok) {
+            setGroupToken(undefined);
+            return;
+        }
+
+        const json = await response.json();
+        setGroupToken(json);
+    }
+
     useEffect(() => {
 
         loadName();
+        loadGame();
         loadMembers();
         loadHistory();
+        loadQuizzes();
+        loadGroupToken();
 
     }, [])
 
     return [
         {
+            token: groupToken,
             name: name,
+            game: game,
             members: members,
             history: history,
+            quizzes: quizzes,
         },
         loadName,
         loadMembers,
         loadHistory,
+        loadGame,
     ];
 }
 

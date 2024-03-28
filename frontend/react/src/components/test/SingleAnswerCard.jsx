@@ -1,38 +1,88 @@
 import {useState} from 'react';
+import NumberField from '../ui/NumberField';
+import TextField from '../ui/TextField';
 
 
 const SingleAnswerCard = ({id, data, setData, onDelete}) => {
     const [expanded, setExpanded] = useState(false);
 
     if (expanded) {
+        const mapper = (a, index) => {
+            const onChange = (value) => {
+                const newAnswers = data.answers.map((ans, i) => {
+                    if (i == index) {
+                        return value;
+                    } else {
+                        return ans;
+                    }
+                });
+                setData(id, {...data, answers: newAnswers});
+            };
+
+            if (index == data.correct) {
+                return (
+                    <div key={index}>
+                        <TextField text={a} setText={onChange} /> (ok)
+                    </div>
+                );
+            }
+
+            return (
+
+                <div key={index}>
+                    <TextField text={a} setText={onChange} />
+                    <button onClick={() => setData(id, {...data, correct: index})}>этот</button>
+                </div>
+            );
+        }
+
+        const answersElements = data.answers.map(mapper);
+
         return (
-            <>
-                Один вариант ответа
+            <div className='QuestionContainer-Expanded'>
+                <span className='QuestionTitle'>Один ответ</span>
 
-                <br/>Время: <input type='number' value={data.time} onChange={(e) => setData(id, {...data, time: e.target.value})} />
-                <br/>Очки: <input type='number' value={data.points} onChange={(e) => setData(id, {...data, points: e.target.value})} />
-                <br/>Текст: <input type='text' value={data.text} onChange={(e) => setData(id, {...data, text: e.target.value})} />
-                <br/>Изображение: <input type='image' onChange={(e) => setData(id, {...data, image: e.target.value})} />
+                <div className='KeyValue'>
+                    Время
+                    <NumberField number={data.time} setNumber={(value) => setData(id, {...data, time: value})} />
+                </div>
+                <div className='KeyValue'>
+                    Очки
+                    <NumberField number={data.points} setNumber={(value) => setData(id, {...data, points: value})} />
+                </div>
+                <div className='KeyValue'>
+                    Изображение
+                    <input type='file' />
+                </div>
 
-                <br/>
+                <input
+                    className='QuestionEdit'
+                    value={data.text}
+                    onChange={(e) => setData(id, {...data, text: e.target.value})}
+                    placeholder='Напишите вопрос' />
 
-                <button onClick={() => onDelete(id)}>Удалить</button>
-
-                <button onClick={() => setExpanded(false)}>Свернуть</button>
-            </>
+                <div className='QuestionAnswersContainer'>{answersElements}</div>
+                
+                <div className='QuestionExpanded-Actions'>
+                    <button onClick={() => onDelete(id)}>Удалить</button>
+                    <button onClick={() => setExpanded(false)}>Свернуть</button>
+                </div>
+            </div>
         );
     }
 
     return (
-        <>
-            Один вариант ответа, {data.time} сек, {data.points} очков
-            
-            <br/>
-
-            <button onClick={() => onDelete(id)}>Удалить</button>
-
-            <button onClick={() => setExpanded(true)}>Развернуть</button>
-        </>
+        <div className='QuestionContainer'>
+            <span className='QuestionTitle'>Один ответ</span>
+            <div className='QuestionParams'>
+                <span className='Param'>{data.time} сек.</span>
+                <span className='Param'>{data.points} очков</span>
+            </div>
+            <div className='QuestionActions'>
+                <button onClick={() => onDelete(id)}>Удалить</button>
+                <button onClick={() => setExpanded(true)}>Развернуть</button>
+            </div>
+        </div>
     );
 }
 

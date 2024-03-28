@@ -47,7 +47,7 @@ class UserService:
             user.password = self._password_context.hash(user.password)
             db_user = await self._repo.create(user)
         except IntegrityError:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                                 detail="email exists")
         
         return self._token_context.encode({ "sub": str(db_user.id) })

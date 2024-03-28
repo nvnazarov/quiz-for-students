@@ -8,9 +8,10 @@ const App = () => {
             <Routes>
                 <Route path='/login' element={<pages.LoginPage />} />
                 <Route path='/register' element={<pages.RegisterPage />} />
-                <Route path='/profile' element={<pages.ProfilePage />} />
+                <Route path='/me/:category' element={<pages.ProfilePage />} />
                 <Route path='/groups/:id' element={<pages.GroupPage />} />
-                <Route path='/groups/my/:name' element={<pages.GroupAdminPage />} />
+                <Route path='/groups/join/:groupToken' element={<pages.GroupJoinPage />} />
+                <Route path='/groups/my/:id' element={<pages.GroupAdminPage />} />
                 <Route path='/constructor/test' element={<pages.TestConstructorPage />} />
                 <Route path='/constructor/quiz' element={<pages.QuizConstructorPage />} />
                 <Route path='/games/test/:id' element={<pages.TestGamePage />} />

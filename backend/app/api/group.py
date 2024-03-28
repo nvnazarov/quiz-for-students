@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, status
+from fastapi.responses import RedirectResponse
 
 from app.dto.group import GroupDto
 from app.dto.group import GroupCreateDto
@@ -7,6 +8,7 @@ from app.dto.member import MemberDto
 from app.dto.member import MemberOnlyDto
 from app.api.dependencies import get_current_user_id
 from app.api.dependencies import get_group_service
+from app.dto.result import ResultDto
 
 router = APIRouter(prefix="/groups",
                    tags=["groups"],
@@ -38,34 +40,29 @@ async def get_group_members(id: int, user_id: int = Depends(get_current_user_id)
     return members
 
 
-@router.post("/join/{group_token}")
+@router.get("/join/{group_token}")
 async def join_group(group_token: str, user_id: int = Depends(get_current_user_id)):
     dto = GroupJoinDto(user_id=user_id, token=group_token)
     await get_group_service().join_group_by_token(dto)
-    return Response(status_code=status.HTTP_200_OK)
+    return RedirectResponse(url="http://localhost:3000/me/groups")
 
 
-@router.post("{id}/token")
-async def join_group(id: int, user_id: int = Depends(get_current_user_id)):
+@router.get("/{id}/token")
+async def get_group_token(id: int, user_id: int = Depends(get_current_user_id)):
     token = await get_group_service().get_group_token(id, user_id)
     return token
 
 
-@router.get("/{id}/name")
-async def get_group_name(id: int, user_id: int = Depends(get_current_user_id)):
-    name = await get_group_service().get_group_name(id, user_id)
-    return name
+@router.get("/{id}", response_model=GroupDto)
+async def get_group_info(id: int, user_id: int = Depends(get_current_user_id)):
+    info = await get_group_service().get_group_info(id, user_id)
+    return info
 
 
-@router.get("/{id}/history")
+@router.get("/{id}/history", response_model=list[ResultDto])
 async def get_group_history(id: int, user_id: int = Depends(get_current_user_id)):
     history = await get_group_service().get_history(id, user_id)
     return history
-
-
-@router.get("/{id}/quiz")
-async def get_group_current_quiz(id: int):
-    return None
 
 
 @router.post("/{id}/ban/{user_id}", response_model=MemberOnlyDto)

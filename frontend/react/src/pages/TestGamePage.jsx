@@ -7,7 +7,13 @@ const TestGamePage = () => {
     const {gameId} = useParams(); 
 
     useEffect(() => {
-        const websocket = WebSocket(`${apiUrl}/games/${gameId}`);
+        const socket = WebSocket(`${apiUrl}/games/ws/${gameId}`);
+
+        socket.onmessage = (e) => {
+            console.log(e.data);
+        };
+
+        socket.send('GET');
     }, []);
     
     return (

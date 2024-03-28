@@ -1,12 +1,17 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { apiUrl } from '../config';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext';
 import SingleAnswerCard from '../components/test/SingleAnswerCard';
 import MultipleAnswersCard from '../components/test/MultipleAnswersCard';
+import TextField from '../components/ui/TextField';
+import SubmitButton from '../components/ui/SubmitButton';
 
 
 const TestConstructorPage = () => {
     const questionKeyRef = useRef(0);
+    const [token,] = useContext(UserContext);
+    const [name, setName] = useState('');
     const [questionsData, setQuestionsData] = useState([]);
     const [saveError, setSaveError] = useState(false);
 
@@ -74,11 +79,19 @@ const TestConstructorPage = () => {
         };
 
         if (data.type === QuestionType.SingleAnswer) {
-            return <li key={data.key}><SingleAnswerCard id={data.key} data={data.data} setData={setData} onDelete={deleteByKey} /></li>;
+            return (
+                <div key={data.key}>
+                    <SingleAnswerCard id={data.key} data={data.data} setData={setData} onDelete={deleteByKey} />
+                </div>
+            );
         }
 
         if (data.type === QuestionType.MultipleAnswers) {
-            return <li key={data.key}><MultipleAnswersCard id={data.key} data={data.data} setData={setData} onDelete={deleteByKey} /></li>;
+            return (
+                <div key={data.key}>
+                    <MultipleAnswersCard id={data.key} data={data.data} setData={setData} onDelete={deleteByKey} />
+                </div>
+            );
         }
     }
 
@@ -87,12 +100,16 @@ const TestConstructorPage = () => {
 
         const fetchRequest = {
             method: 'POST',
-            body: JSON.stringify(questionsData)
-        }; 
+            body: JSON.stringify({
+                data: questionsData,
+            }),
+            headers: {
+                'content-type': 'application/json',
+                token: token,
+            }
+        };
 
-        console.log(questionsData);
-
-        const response = await fetch(`${apiUrl}/test/create`, fetchRequest).catch(() => {});
+        const response = await fetch(`${apiUrl}/quizzes/create/test/${name}`, fetchRequest).catch(() => {});
 
         if (response === undefined || !response.ok) {
             setSaveError(true);
@@ -107,7 +124,7 @@ const TestConstructorPage = () => {
 
     return (
         <>
-            <Link to='/profile'>Назад</Link>
+            <Link to='/me/quizzes'>Назад</Link>
 
             <hr/>
 
@@ -116,20 +133,20 @@ const TestConstructorPage = () => {
                 <li><button onClick={() => addQuestion(QuestionType.MultipleAnswers)}>Несколько ответов</button></li>
             </ul>
 
+            <form onSubmit={onFinish}>
+                {
+                    saveError && <>Не удалось сохранить квиз</>
+                }
+                <TextField text={name} setText={setName} placeholder='Назовите ваш квиз' />
+                <SubmitButton title='Сохранить' />
+            </form>
+
             <hr/>
 
             {
                 questionsCards.length === 0 ? <>Добавьте вопрос</> :
                 questionsCards
             }
-
-            <hr/>
-
-            {
-                saveError && <>Не удалось сохранить квиз</>
-            }
-
-            <button onClick={onFinish}>Сохранить</button>
         </>
     );
 }

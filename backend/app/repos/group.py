@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from app.dto.group import GroupCreateDto
 from app.models.group import Group
 from app.models.member import Member
+from app.dto.result import ResultDto
 
 
 class GroupRepository(ABC):    
@@ -42,4 +43,9 @@ class GroupRepository(ABC):
     
     @abstractmethod
     async def find_by_id(self, group_id: int) -> Group | None:
+        raise NotImplementedError
+    
+    
+    @abstractmethod
+    async def get_history(self, group_id: int) -> list[ResultDto]:
         raise NotImplementedError

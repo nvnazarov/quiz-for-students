@@ -1,101 +1,59 @@
 import { useState, useContext } from 'react';
-import { UserContext } from '../contexts/UserContext.jsx';
-import { apiUrl } from '../config.js';
+import { UserContext } from '../contexts/UserContext';
 import { Link, Navigate } from 'react-router-dom';
+import { login } from '../api/User'; 
+import SubmitButton from '../components/ui/SubmitButton';
+import TextField from '../components/ui/TextField';
+import PasswordField from '../components/ui/PasswordField';
+import Notification from '../components/ui/Notification';
 
 
 const LoginPage = () => {
-    const [token, setToken] = useContext(UserContext)
-
-    const [form, setForm] = useState({
-        email: '',
-        password: '',
-    })
-
+    const [token, setToken] = useContext(UserContext);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [formInfo, setFormInfo] = useState({
         hint: null,
         isSended: false
-    })
+    });
 
     const onSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        if (form.email === '') {
-            setFormInfo({ hint: 'Укажите почту' })
-            e.target[0].focus()
-            return
-        }
-
-        if (form.password === '') {
-            setFormInfo({ hint: 'Укажите пароль' })
-            e.target[1].focus()
-            return
-        }
-
-        setFormInfo({ isSended: true, hint: null })
-
-        let token = await fetch(
-            `${apiUrl}/users/login`,
-            {
-                method: 'POST',
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: form.email,
-                    password: form.password
-                })
-            })
-        .then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-
-            if (response.status === 400) {
-                setFormInfo({ isSended: false, hint: 'Пароль или почта неверны' })
-            } else {
-                setFormInfo({ isSended: false, hint: 'Попробуйте в другой раз' })
-            }
-
-            return null
-        })
-        .catch(error => {
-            setFormInfo({ isSended: false, hint: 'Попробуйте в другой раз' })
-            return null
-        })
-
-        if (token) {
-            setToken(token)
+        setFormInfo({isSended: true, hint: null});
+        const response = await login({email, password});
+        if (response.token) {
+            setToken(response.token);
+        } else {
+            setFormInfo({isSended: false, hint: response.hint});
         }
     }
 
     if (token) {
-        return <Navigate to='/profile'/>;
+        return <Navigate to='/me/profile'/>;
     }
 
     return (
         <>
-            <form onSubmit={onSubmit}>
-                <input name='email' type='text' placeholder='Почта' value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value}) } />
-
-                <input name='password' type='password' placeholder='Пароль' value={form.password}
-                    onChange={(e) => setForm({ ...form, password: e.target.value })} />
-
-                <button name='submit' type='submit' disabled={formInfo.isSended}>
-                    { formInfo.isSended ? '...' : 'Войти' }
-                </button>
-
-                { formInfo.hint && <span className='err'>{formInfo.hint}</span> }
-
-                <span className='alt'>Забыли пароль?</span>
+            <form className='Centered Box' onSubmit={onSubmit}>
+                <div className='List Mid'>
+                    <h1>Авторизация</h1>
+                    <TextField placeholder='Почта' text={email} setText={setEmail} />
+                    <PasswordField placeholder='Пароль' text={password} setText={setPassword} />
+                    <div>
+                        <SubmitButton isLoading={formInfo.isSended} title={'Войти'} />
+                    </div>
+                    <hr/>
+                    <Link to="/register">Создать аккаунт</Link>
+                </div>
             </form>
 
-            <hr/>
-
-            <Link to="/register">Зарегистрироваться</Link>
+            {
+                formInfo.hint && <Notification message={formInfo.hint} />
+            }
         </>
-    )
+    );
 }
+
 
 export default LoginPage;
