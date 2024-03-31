@@ -1,10 +1,11 @@
 import os
 from typing import Annotated
+from datetime import timedelta
 
-from fastapi import Header, HTTPException, status
+from fastapi import Header
 from passlib.context import CryptContext
 
-from app.services.users import UserService
+from app.services.user import UserService
 from app.services.group import GroupService
 from app.services.quiz import QuizService
 from app.services.game import GameService
@@ -16,17 +17,24 @@ from app.security.jwt import JwtContext
 
 _user_service = UserService(SqlUserRepository(),
                             JwtContext(key=os.getenv("QFS_USER_TOKEN_KEY"),
-                                       algorithm=os.getenv("QFS_USER_TOKEN_ALGO")),
-                            CryptContext(schemes=["bcrypt"]))
+                                       algorithm=os.getenv("QFS_USER_TOKEN_ALGO"),
+                                       expire=timedelta(minutes=int(os.getenv("QFS_USER_TOKEN_EXPIRE_MINUTES")))
+                                       ),
+                            CryptContext(schemes=["bcrypt"])
+                            )
 
 _group_service = GroupService(SqlGroupRepository(),
                               JwtContext(key=os.getenv("QFS_GROUP_TOKEN_KEY"),
-                                         algorithm=os.getenv("QFS_GROUP_TOKEN_ALGO")))
+                                         algorithm=os.getenv("QFS_GROUP_TOKEN_ALGO"),
+                                         expire=timedelta(minutes=int(os.getenv("QFS_GROUP_TOKEN_EXPIRE_MINUTES")))
+                                         ),
+                              )
 
 _quiz_service = QuizService(SqlQuizRepository())
 
-
-_game_service = GameService(SqlGroupRepository(), SqlQuizRepository())
+_game_service = GameService(SqlGroupRepository(),
+                            SqlQuizRepository(),
+                            SqlUserRepository())
 
 
 def get_user_service() -> UserService:

@@ -9,10 +9,16 @@ class UserDto(BaseModel):
     email: str
 
 
-class UserCreateDto(BaseModel):
+class UserRegisterDto(BaseModel):
     name: str
     email: str
     password: str
+
+
+class UserCreateDto(BaseModel):
+    name: str
+    email: str
+    hashed_password: str
 
 
 class UserAuthDto(BaseModel):
@@ -20,12 +26,12 @@ class UserAuthDto(BaseModel):
     password: str
 
 
-class UserBanDto(BaseModel):
-    id: int
+class UserUpdateDto(BaseModel):
+    name: str
 
 
-class UserUnbanDto(BaseModel):
-    id: int
+class UserActivateDto(BaseModel):
+    code: str
 
 
 def to_user_dto(user: User):

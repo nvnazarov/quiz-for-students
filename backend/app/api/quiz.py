@@ -11,24 +11,23 @@ router = APIRouter(prefix="/quizzes",
                    )
 
 
-@router.post("/create/test/{name}")
-async def create_test(name: str,
-                      data: TestDataDto,
-                      user_id: int = Depends(get_current_user_id)
+@router.post("/create/test", response_model=QuizDto)
+async def create_test(data: TestDataDto,
+                      user_id: int = Depends(get_current_user_id),
                       ):
-    await get_quiz_service().create_test(user_id, name, data)
-    return Response(status_code=status.HTTP_200_OK)
+    test = await get_quiz_service().create_test(user_id, data)
+    return test
 
 
-@router.post("/create/quiz/{name}")
-async def create_quiz(name: str,
-                      data: QuizDataDto,
-                      user_id: int = Depends(get_current_user_id)
+@router.post("/create/quiz", response_model=QuizDto)
+async def create_quiz(data: QuizDataDto,
+                      user_id: int = Depends(get_current_user_id),
                       ):
-    await get_quiz_service().create_quiz(user_id, name, data)
+    quiz = await get_quiz_service().create_quiz(user_id, data)
+    return quiz
 
 
 @router.get("/my", response_model=list[QuizDto])
-async def get_all_quizzes(user_id: int = Depends(get_current_user_id)):    
-    quizzes = await get_quiz_service().get_all_quizzes(user_id)
+async def get_all_user_quizzes(user_id: int = Depends(get_current_user_id)):    
+    quizzes = await get_quiz_service().get_all_quizzes_by_user_id(user_id)
     return quizzes

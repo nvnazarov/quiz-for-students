@@ -1,22 +1,33 @@
 from typing import Any, MutableMapping
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 
 from jose import jwt
 
-from .token import TokenContext
+from app.security.token import TokenContext
 
 
 class JwtContext(TokenContext):
-    def __init__(self, key: str, algorithm: str):
-        self.key = key
-        self.algorithm = algorithm
+    _key: str = None
+    _algorithm: str = None
+    _expire: timedelta = None
+    
+    
+    def __init__(self, key: str, algorithm: str, expire: timedelta):
+        self._key = key
+        self._algorithm = algorithm
+        self._expire = expire
+
 
     def encode(self, claims: MutableMapping[str, Any]) -> str:
-        return jwt.encode(claims, self.key, self.algorithm)
+        claims.update(exp=self._get_expire_time())
+        return jwt.encode(claims, self._key, self._algorithm)
+
 
     def decode(self, token) -> dict[str, Any]:
-        return jwt.decode(token, self.key, self.algorithm)
+        return jwt.decode(token, self._key, self._algorithm)
 
 
-def get_expire_time(minutes: int) -> datetime:
-    return datetime.now(timezone.utc) + timedelta(minutes=minutes)
+    def _get_expire_time(self) -> datetime:
+        return datetime.now(timezone.utc) + self._expire

@@ -1,7 +1,12 @@
 from fastapi import APIRouter, Depends
 
-from .dependencies import get_current_user_id, get_user_service
-from app.dto.user import UserCreateDto, UserAuthDto, UserDto
+from app.api.dependencies import get_current_user_id
+from app.api.dependencies import get_user_service
+from app.dto.user import UserRegisterDto
+from app.dto.user import UserAuthDto
+from app.dto.user import UserDto
+from app.dto.user import UserUpdateDto
+from app.dto.user import UserActivateDto
 
 router = APIRouter(prefix="/users",
                    tags=["users"],
@@ -9,18 +14,19 @@ router = APIRouter(prefix="/users",
 
 
 @router.post("/activate")
-def activate_user():
+def activate_user(data: UserActivateDto):
     pass
 
 
 @router.post("/register")
-async def register(user: UserCreateDto) -> str:
-    return await get_user_service().register(user)
+async def register(data: UserRegisterDto) -> str:
+    token = await get_user_service().register_user(data)
+    return token
 
 
-@router.post("/login")
-async def auth(user: UserAuthDto) -> str:
-    token = await get_user_service().auth(user)
+@router.post("/auth")
+async def auth(data: UserAuthDto) -> str:
+    token = await get_user_service().auth_user(data)
     return token
 
 
@@ -30,7 +36,8 @@ async def get_user(user_id: int = Depends(get_current_user_id)):
     return user
 
 
-@router.post("/name/{name}", response_model=UserDto)
-async def change_name(name: str, user_id: int = Depends(get_current_user_id)):
-    user = await get_user_service().change_name(user_id, name)
+@router.post("/update", response_model=UserDto)
+async def change_user_name(data: UserUpdateDto,
+                           user_id: int = Depends(get_current_user_id)):
+    user = await get_user_service().update_user_by_id(user_id, data)
     return user

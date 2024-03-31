@@ -18,12 +18,15 @@ async def create_game(dto: GameCreateDto,
     return game_id
 
 
-@router.websocket("/ws/{game_id}")
+@router.websocket("/{game_id}/ws/{token}")
 async def connect_to_game(game_id: int,
+                          token: str,
                           websocket: WebSocket,
-                          user_id: int = Depends(get_current_user_id),
                           ):
-    
+    try:
+        user_id = get_current_user_id(token)
+    except Exception as e:
+        return
     await get_game_service().connect(game_id, websocket, user_id)
 
 

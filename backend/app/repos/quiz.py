@@ -17,10 +17,10 @@ class QuizRepository(ABC):
     
     
     @abstractmethod
-    async def find_all_owned_by(self, user_id: int) -> list[Quiz]:
+    async def find_all_quizzes_by_user_id(self, user_id: int) -> list[Quiz]:
         raise NotImplementedError
     
     
     @abstractmethod
-    async def find_by_id(self, id: int) -> Quiz:
-        raise NotImplemented
+    async def find_quiz_by_id(self, id: int) -> Quiz:
+        raise NotImplementedError

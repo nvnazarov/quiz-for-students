@@ -6,20 +6,20 @@ from app.dto.user import UserCreateDto
 
 class UserRepository(ABC):
     @abstractmethod
-    async def create(self, user: UserCreateDto) -> User:
+    async def create_user(self, user: UserCreateDto) -> User:
         raise NotImplementedError
 
 
     @abstractmethod
-    async def change_name(self, user_id, name) -> User:
+    async def change_user_name_by_id(self, user_id, name) -> User:
         raise NotImplementedError
 
 
     @abstractmethod
-    async def find_by_email(self, email: str) -> User | None:
+    async def find_user_by_email(self, email: str) -> User | None:
         raise NotImplementedError
 
 
     @abstractmethod
-    async def find_by_id(self, id: int) -> User | None:
+    async def find_user_by_id(self, id: int) -> User | None:
         raise NotImplementedError
