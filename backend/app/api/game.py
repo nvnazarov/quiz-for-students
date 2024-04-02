@@ -6,7 +6,8 @@ from app.dto.game import GameCreateDto
 from app.dto.game import GameDto
 
 router = APIRouter(
-    prefix="/games"
+    prefix="/games",
+    tags=["games"]
 )
 
 

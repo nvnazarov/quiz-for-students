@@ -48,7 +48,15 @@ class UserService:
         return token
 
 
-    async def register_user(self, user: UserRegisterDto) -> str:
+    async def activate_user(self, user_id: int):
+        await self._repo.activate_user_by_id(user_id)
+
+
+    async def register_user(self, user: UserRegisterDto) -> int:
+        if len(user.name) > 100:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                                "Name is too long")
+        
         if not self._is_valid_password(user.password):
             raise HTTPException(status.HTTP_400_BAD_REQUEST,
                                 "Invalid password")
@@ -63,10 +71,7 @@ class UserService:
             raise HTTPException(status.HTTP_409_CONFLICT,
                                 "Email exists")
         
-        encode_data = {
-            "sub": str(db_user.id),
-        }
-        return self._token_context.encode(encode_data)
+        return db_user.id
 
 
     async def get_user_by_id(self, id: int) -> UserDto:

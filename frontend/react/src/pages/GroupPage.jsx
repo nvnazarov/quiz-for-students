@@ -1,67 +1,52 @@
-import { Link, useParams } from 'react-router-dom';
-import { useGroupData } from '../hooks/Group.jsx';
-import { useContext } from 'react';
-import { UserContext } from '../contexts/UserContext.jsx';
+import { Navigate, useParams } from "react-router-dom";
+import { useContext, useState } from "react";
+import { UserContext } from "../contexts/UserContext";
+import SideNavigationFragment from "../components/fragments/SideNavigationFragment";
+import GamesFragment from "../components/fragments/group/GamesFragment";
+import MembersFragment from "../components/fragments/group/MembersFragment";
+import ChatFragment from "../components/fragments/group/ChatFragment";
+import { useGroupData } from "../hooks/group";
 
 
 const GroupPage = () => {
     const { id } = useParams();
     const [token] = useContext(UserContext);
-    const [data, loadName, loadMembers, loadHistory] = useGroupData(token, id);
+    const [categoryIndex, setCategoryIndex] = useState(0);
+    const groupData = useGroupData(token, id);
 
-    const memberMapper = (member) => <li key={member.id}>{member.name}</li>;
-    const membersCards = data.members ? data.members.map(memberMapper) : data.members;
+    const categories = [
+        "Игры",
+        "Участники",
+        "Чат",
+        "Назад",
+    ];
 
-    const historyMapper = (h) => <li key={h.id}>{h.name} {h.date} <Link to={`/history/${h.id}`}>h.id</Link></li>;
-    const historyCards = data.history ? data.history.map(historyMapper) : data.history;
+    const fragments = [
+        <GamesFragment currentGame={ groupData.currentGame } results={ groupData.results } />,
+        <MembersFragment members={ groupData.members } />,
+        <ChatFragment />
+    ];
+
+    const onCategorySelect = (index) => {
+        setCategoryIndex(index);
+    };
+
+    if (categoryIndex === categories.length - 1) {
+        return <Navigate to="/profile" />;
+    }
 
     return (
-        <>
-            <Link to='/me/groups'>Назад</Link>
-
-            <hr/>
-
-            <h3>
-                {
-                    data.name === null ? <>...</> :
-                    data.name === undefined ? <>Не удалось загрузить название группы</> :
-                    data.name
-                }
-            </h3>
-
-            <hr/>
-
-            <h3>Участники</h3>
-            <ul>
-                {
-                    membersCards === null ? <>...</> :
-                    membersCards === undefined ? <>Не удалось загрузить участников</> :
-                    membersCards.length === 0 ? <>Пусто</> :
-                    membersCards
-                }
-            </ul>
-
-            <hr/>
-
-            <h3>Текущий квиз</h3>
-            {
-                data.game === null ? <>...</> :
-                data.game === undefined ? <>Не удалось загрузить текущую игру</> :
-                data.game
-            }
-            <hr/>
-
-            <h3>Прошедшие квизы</h3>
-            <ul>
-                {
-                    historyCards === null ? <>...</> :
-                    historyCards === undefined ? <>Не удалось загрузить квизы</> :
-                    historyCards.length === 0 ? <>Пусто</> :
-                    historyCards
-                }    
-            </ul>
-            
-        </>
+        <div className="ProfileLayout">
+            <div className="ProfileNavigation">
+                <SideNavigationFragment
+                    categories={ categories }
+                    selectedIndex={ categoryIndex }
+                    onSelect={ onCategorySelect } />
+            </div>
+            <div className="ProfileMain">
+                { fragments[categoryIndex] }
+            </div>
+        </div>
     );
 }
 

@@ -1,23 +1,44 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useEffect, useState } from "react";
+import { getUser } from "../api/user";
 
-export const UserContext = createContext([null, null])
+const UserContext = createContext([null, null]);
 
-export const UserContextProvider = ({ children }) => {
-    const [token, setToken] = useState(localStorage.getItem('token'));
+const UserContextProvider = ({ children }) => {
+    const [token, setToken] = useState(localStorage.getItem("token"));
 
     const setAndStoreToken = (token) => {
         if (token) {
-            localStorage.setItem('token', token);
+            localStorage.setItem("token", token);
         } else {
-            localStorage.removeItem('token');
+            localStorage.removeItem("token");
         }
-        
         setToken(token);
-    }
+    };
+
+    useEffect(() => {
+        const checkToken = async () => {
+            const data = {
+                authToken: token,
+            };
+            const response = await getUser(data);
+
+            if (response === undefined || !response.ok) {
+                setAndStoreToken(null);
+            }
+        };
+
+        checkToken();
+    }, []);
 
     return (
         <UserContext.Provider value={[token, setAndStoreToken]}>
             {children}
         </UserContext.Provider>
     );
-}
+};
+
+
+export {
+    UserContext,
+    UserContextProvider,
+};

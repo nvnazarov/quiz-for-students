@@ -23,6 +23,10 @@ h1 {
     font-size: 1.5rem;
 }
 
+h2 {
+    font-size: 1.2rem;
+}
+
 .Centered {
     position: absolute;
     top: 50%;
@@ -43,6 +47,12 @@ h1 {
 
 .Mid {
     text-align: center;
+}
+
+.ErrorCode {
+    font-weight: bold;
+    font-size: 5rem;
+    color: #bbb;
 }
 
 .Box {
@@ -100,30 +110,75 @@ h1 {
     box-shadow: rgba(46, 46, 172, 0.1) 0px 2px 8px 0px;
 }
 
+/* Members */
+.MemberBox {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: #eee;
+    transition-duration: 0.2s;
+    border: 2px solid transparent;
+}
+.MemberBoxBanned {
+    background-color: #fcc;
+}
+.MemberBox:hover {
+    border: 2px solid rgb(46, 46, 172);
+}
+
+
+/* Layout */
 .Horizontal {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
 }
-
+.Vertical {
+    display: flex;
+    flex-direction: column;
+}
+.VerticalCentered {
+    align-items: center;
+}
 .Grid {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 1rem;
 }
-
-.ListRow {
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    background-color: #eee;
+.StartEnd {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
+/* Icons */
+.Icon {
+    opacity: 0.2;
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Gaps and margins */
+.VerticalMargin {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.GapSmall {
+    gap: 0.5rem;
+}
+.GapMid {
+    gap: 1rem;
+}
+
+/* Copy box */
 .CopyBoxLayout {
     display: flex;
     flex-direction: row;
 }
-
 .CopyBoxText {
     color: black;
     background-color: white;
@@ -132,7 +187,6 @@ h1 {
     border-bottom-left-radius: 0.5rem;
     padding: 0.4rem 1rem;
 }
-
 .CopyBoxButton {
     color: white;
     background-color: rgb(46, 46, 172);
@@ -148,7 +202,160 @@ select {
     border: 2px solid #ccc;
     padding: 0.4rem 1rem;
 }
-
 select:hover {
     box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+}
+
+.NameEmailBox {
+    margin-top: 1rem;
+    max-width: fit-content;
+    margin-bottom: 1rem;
+}
+.Message {
+    max-width: fit-content;
+    padding: 0.5rem 1rem;
+    background-color: #f7e76d;
+    border-radius: 0.5rem;
+}
+
+/* Question constructor */
+.QuestionBox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid #eee;
+    transition-duration: 0.2s;
+}
+.QuestionBoxExpanded {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid #eee;
+}
+.QuestionBox:hover {
+    border: 2px solid rgb(46, 46, 172);
+}
+.QuestionEdit {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 2px dashed #bbb;
+    border-radius: 0.5rem;
+    outline: none;
+    text-align: center;
+}
+.Param {
+    background-color: #eee;
+    border-radius: 0.6rem;
+    padding: 0.1rem 1ch;
+}
+.TextParam {
+    border-radius: 0.6rem;
+    padding: 0.1rem 1ch;
+}
+.ParamsBox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: fit-content;
+}
+.QuestionAnswersContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+.AnswerBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background-color: #eee;
+}
+.Scrollable {
+    overflow-y: hidden;
+}
+
+/* UI */
+.KeyValue {
+    border-radius: 0.5rem;
+    box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+}
+.KeyValueLeft {
+    flex: 0 0 5ch;
+    padding: 0.2rem 1rem;
+    background-color: #ccc;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border: 2px solid #ccc;
+    border-right: none;
+}
+.KeyValueRight {
+    flex: 1;
+    padding: 0.2rem 1rem;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-left: none;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+/* Page */
+.Page {
+    height: 100%;
+    padding: 1rem;
+    background-color: white;
+}
+
+/* Sidebar */
+.SidebarGap {
+    margin-top: 1rem;
+    gap: 0.5rem;
+}
+.SidebarOption {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #ddd;
+    padding: 0.5rem 1rem;
+    transition-duration: 0.2s;
+    border: 2px solid transparent;
+}
+.SidebarOption:hover {
+    border: 2px solid rgb(46, 46, 172);
+}
+.SidebarOptionSelected {
+    border: 2px solid rgb(46, 46, 172);
+    color: white;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: rgb(46, 46, 172);
+    padding: 0.5rem 1rem;
+}
+
+/* Game */
+.GamePage {
+    background-color: white;
+}
+
+/* Chat */
+.Message {
+    border: 0.5rem;
+    padding: 0.5rem;
+    background-color: #eee;
+}
+.MessageAuthor {
+    margin-right: 0.5rem;
+    color: rgb(46, 46, 172);
+}
+.MessageDate {
+    font-size: 0.9rem;
+    color: #ccc;
 }

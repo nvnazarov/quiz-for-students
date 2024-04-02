@@ -7,9 +7,11 @@ import QuizConstructorPage from './QuizConstructorPage.jsx';
 import QuizGamePage from './QuizGamePage.jsx';
 import TestConstructorPage from './TestConstructorPage.jsx';
 import TestGamePage from './TestGamePage.jsx';
+import TestGameAdminPage from './TestGameAdminPage.jsx';
 import RegisterPage from './RegisterPage.jsx';
 import LoginPage from './LoginPage.jsx';
 import GroupJoinPage from './GroupJoinPage.jsx';
+import UserActivatePage from "./UserActivatePage.jsx"
 
 
 export {
@@ -24,5 +26,7 @@ export {
     TestGamePage,
     RegisterPage,
     LoginPage,
-    GroupJoinPage
+    GroupJoinPage,
+    TestGameAdminPage,
+    UserActivatePage,
 };

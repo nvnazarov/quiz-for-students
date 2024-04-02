@@ -5,3 +5,5 @@ from .member import Member
 from .quiz import Quiz
 from .result import Result
 from .image import Image
+from .invite import Invite
+from .message import Message

@@ -3,15 +3,12 @@ import {Link} from "react-router-dom";
 
 const NoPage = () => {
     return (
-        <>
-            This page does not exist.
-            <br/>
-            <Link to="/">Home</Link>
-            <br/>
-            <Link to="/profile">Profile</Link>
-        </>
+        <div className="Centered Vertical">
+            <div className="ErrorCode Mid">404</div>
+            <Link className="Mid" to="/profile">Profile</Link>
+        </div>
     );
-}
+};
 
 
 export default NoPage;

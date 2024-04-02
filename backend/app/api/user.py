@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 
 from app.api.dependencies import get_current_user_id
 from app.api.dependencies import get_user_service
+from app.api.dependencies import get_email_service
 from app.dto.user import UserRegisterDto
 from app.dto.user import UserAuthDto
 from app.dto.user import UserDto
@@ -13,15 +14,17 @@ router = APIRouter(prefix="/users",
                    )
 
 
-@router.post("/activate")
-def activate_user(data: UserActivateDto):
-    pass
+@router.post("/activate/{token}")
+async def activate_user(token: str):
+    user_id = await get_email_service().get_user_id_from_token(token)
+    await get_user_service().activate_user(user_id)
 
 
 @router.post("/register")
-async def register(data: UserRegisterDto) -> str:
-    token = await get_user_service().register_user(data)
-    return token
+async def register(background_tasks: BackgroundTasks,
+                   data: UserRegisterDto):
+    user_id = await get_user_service().register_user(data)
+    background_tasks.add_task(get_email_service().send_verification_email, user_id, data.email)
 
 
 @router.post("/auth")

@@ -1,18 +1,9 @@
-import {Link} from 'react-router-dom'
+import { Navigate } from "react-router-dom";
+
 
 const HomePage = () => {
-    return (
-        <>
-            Домашняя страница 
-            
-            <hr/>
-
-            <Link to="/login">Войти</Link>
-            <br/>
-            <Link to="/register">Зарегистрироваться</Link>
-        </>
-    )
-}
+    return <Navigate to="/login" />;
+};
 
 
-export default HomePage
+export default HomePage;

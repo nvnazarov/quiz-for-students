@@ -43,3 +43,10 @@ class SqlUserRepository(UserRepository):
     async def find_user_by_id(self, id: int) -> User | None:
         async with async_session_maker() as session:
             return await session.get(User, id)
+    
+    
+    async def activate_user_by_id(self, id: int):
+        async with async_session_maker() as session:
+            stmt = update(User).where(User.id == id).values(active=True)
+            await session.execute(stmt)
+            await session.commit()

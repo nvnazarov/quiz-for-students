@@ -8,4 +8,4 @@ class Image(Base):
     __tablename__ = "images"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    data: Mapped[bytes] = mapped_column(default=False)
+    data: Mapped[bytes] = mapped_column()

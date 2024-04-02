@@ -23,3 +23,8 @@ class UserRepository(ABC):
     @abstractmethod
     async def find_user_by_id(self, id: int) -> User | None:
         raise NotImplementedError
+    
+    
+    @abstractmethod
+    async def activate_user_by_id(self, id: int):
+        raise NotImplementedError

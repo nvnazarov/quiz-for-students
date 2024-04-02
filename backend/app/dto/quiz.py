@@ -4,11 +4,6 @@ from pydantic import BaseModel
 from app.models.quiz import Quiz
 
 
-class TestDataDto(BaseModel):
-    name: str
-    data: dict[str, Any]
-
-
 class QuizDataDto(BaseModel):
     name: str
     data: dict[str, Any]
@@ -23,6 +18,11 @@ class QuizDto(BaseModel):
 class QuizCreateDto(BaseModel):
     name: str
     owner_id: int
+    data: dict[str, Any]
+
+
+class QuizUpdateDto(BaseModel):
+    id: int
     data: dict[str, Any]
 
 

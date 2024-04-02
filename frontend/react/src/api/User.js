@@ -1,79 +1,84 @@
-import { apiUrl } from '../config';
+import { apiUrl } from "./config";
 
 
-const login = async (form) => {
-    if (form.email === '') {
-        return {token: null, hint: 'Укажите почту'};
-    }
-
-    if (form.password === '') {
-        return {token: null, hint: 'Укажите пароль'};
-    }
-
+const authUser = async ({ email, password }) => {
+    const body = {
+        email,
+        password,
+    };
     const requestParams = {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'content-type': 'application/json',
+            "content-type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(body),
     };
 
-    const response = await fetch(`${apiUrl}/users/login`, requestParams).catch(() => {});
-
-    if (response === undefined || response.status >= 500) {
-        return {token: null, hint: 'Попробуйте в другой раз'};
-    }
-
-    if (response.status === 400) {
-        return {token: null, hint: 'Пароль или почта неверны'};
-    }
-    
-    const token = await response.json();
-    return {token: token, hint: null};
+    const response = await fetch(`${apiUrl}/users/auth`, requestParams).catch(() => undefined);
+    return response;
 }
 
 
-const register = async (form) => {
-    if (form.name === '') {
-        return {token: null, hint: 'Укажите имя'};
-    }
-
-    if (form.email === '') {
-        return {token: null, hint: 'Укажите почту'};
-    }
-
-    if (form.password === '') {
-        return {token: null, hint: 'Укажите пароль'};
-    }
-
+const registerUser = async ({ name, email, password }) => {
+    const body = {
+        name,
+        email,
+        password,
+    };
     const requestParams = {
-        method: 'POST',
+        method: "POST",
         headers: {
-            "content-type": 'application/json',
+            "content-type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(body),
     };
 
-    const response = await fetch(`${apiUrl}/users/register`, requestParams).catch(() => {});
-    
-    if (response === undefined || response.status >= 500) {
-        return {token: null, hint: 'Попробуйте в другой раз'};
-    }
-
-    if (response.status === 400) {
-        return {token: null, hint: 'Пароль недостаточно сложный'};
-    }
-
-    if (response.status === 409) {
-        return {token: null, hint: 'Почта уже используется'};
-    }
-
-    const token = await response.json();
-    return {token: token, hint: null};
+    const response = await fetch(`${apiUrl}/users/register`, requestParams).catch(() => undefined);
+    return response;
 }
+
+
+const getUser = async ({ authToken }) => {
+    const requestParams = {
+        headers: {
+            token: authToken,
+        },
+    };
+    const response = await fetch(`${apiUrl}/users/me`, requestParams).catch(() => undefined);
+    return response;
+};
+
+
+const updateUser = async ({ authToken, name }) => {
+    const body = {
+        name: name,
+    };
+    const requestParams = {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "content-type": "application/json",
+            token: authToken,
+        },
+    };
+    const response = await fetch(`${apiUrl}/users/update`, requestParams).catch(() => undefined);
+    return response;
+};
+
+
+const activateUser = async ({ activateToken }) => {
+    const requestParams = {
+        method: "POST",
+    };
+    const response = await fetch(`${apiUrl}/users/activate/${activateToken}`, requestParams).catch(() => undefined);
+    return response;
+};
 
 
 export {
-    login,
-    register,
-}
+    authUser,
+    registerUser,
+    getUser,
+    updateUser,
+    activateUser,
+};

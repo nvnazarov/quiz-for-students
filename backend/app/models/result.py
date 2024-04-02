@@ -14,5 +14,5 @@ class Result(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     group_id: Mapped[int] = mapped_column(ForeignKey("groups.id"))
     quiz_id: Mapped[int] = mapped_column(ForeignKey("quizzes.id"))
-    date: Mapped[datetime] = mapped_column(default="current_date")
+    date: Mapped[datetime] = mapped_column()
     scores: Mapped[dict[str, Any]] = mapped_column()

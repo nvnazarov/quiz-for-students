@@ -1,147 +1,140 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { useGroupData } from '../hooks/Group.jsx';
-import { useContext } from 'react';
-import { UserContext } from '../contexts/UserContext.jsx';
-import { apiUrl } from '../config.js';
-import QRCode from 'react-qr-code';
-import CopyBox from '../components/ui/CopyBox.jsx';
-import SubmitButton from '../components/ui/SubmitButton.jsx';
+import { Navigate, useParams } from "react-router-dom";
+import { useContext, useState } from "react";
+import { UserContext } from "../contexts/UserContext";
+import SideNavigationFragment from "../components/fragments/SideNavigationFragment";
+import GamesAdminFragment from "../components/fragments/group/GamesAdminFragment";
+import MembersAdminFragment from "../components/fragments/group/MembersAdminFragment";
+import ChatFragment from "../components/fragments/group/ChatFragment";
+import { useGroupAdminData } from "../hooks/group";
+import { banGroupMember, inviteUser, unbanGroupMember } from "../api/group";
+import { createGame } from "../api/game";
+import Notification from "../components/ui/Notification";
 
 
 const GroupAdminPage = () => {
     const { id } = useParams();
-    const [searchParams,] = useSearchParams();
     const [token] = useContext(UserContext);
-    const [data, loadName, loadMembers, loadHistory, loadGame] = useGroupData(token, id);
-
-    const category = searchParams.get('p');
-
-    const onBan = async (status, memberId) => {
-        const fetchRequest = {
-            method: 'POST',
-            headers: {
-                token: token,
-            }
-        };
-
-        if (status) {
-            const response = await fetch(`${apiUrl}/groups/${id}/unban/${memberId}`, fetchRequest);
-            if (response.ok) {
-                loadMembers();
-            }
-        } else {
-            const response = await fetch(`${apiUrl}/groups/${id}/ban/${memberId}`, fetchRequest);
-            if (response.ok) {
-                loadMembers();
-            }
+    const [categoryIndex, setCategoryIndex] = useState(0);
+    const groupAdminData = useGroupAdminData(token, id);
+    const [ message, setMessage ] = useState(
+        {
+            ok: false,
+            hint: null,
         }
-    }
+    );
 
-    const onCreateGame = async (e) => {
-        e.preventDefault();
+    const categories = [
+        "Игры",
+        "Участники",
+        "Чат",
+        "Назад",
+    ];
 
-        const quizId = e.target.select.value;
-        const requestParams = {
-            method: 'POST',
-            body: JSON.stringify({
-                group_id: +id,
-                quiz_id: +quizId,
-            }),
-            headers: {
-                'content-type': 'application/json',
-                token: token,
-            }
+    const onBan = async (member) => {
+        const data = {
+            authToken: token,
+            groupId: id,
+            memberId: member.id,
         };
-        const response = await fetch(`${apiUrl}/games/create`, requestParams).catch(() => {});
-        
-        if (response === undefined || !response.ok) {
-            // TODO
+        setMessage({ ok: true, hint: null });
+        const response = await banGroupMember(data);
+
+        if (response !== undefined && response.ok) {
+            groupAdminData.loadGroupMembers();
+            setMessage({ ok: true, hint: "Успешно." });
+        } else {
+            setMessage({ ok: false, hint: "Не удалось заблокировать пользователя." });
+        }
+    };
+
+    const onUnban = async (member) => {
+        const data = {
+            authToken: token,
+            groupId: id,
+            memberId: member.id,
+        };
+        setMessage({ ok: true, hint: null });
+        const response = await unbanGroupMember(data);
+
+        if (response !== undefined && response.ok) {
+            groupAdminData.loadGroupMembers();
+            setMessage({ ok: true, hint: "Успешно." });
+        } else {
+            setMessage({ ok: false, hint: "Не удалось разблокировать пользователя." });
+        }
+    };
+
+    const onCreateGame = async (quizId) => {
+        const data = {
+            authToken: token,
+            groupId: id,
+            quizId,
+        };
+        setMessage({ ok: false, hint: null });
+        const response = await createGame(data);
+
+        if (response !== undefined && response.ok) {
+            groupAdminData.loadCurrentGame();
+            setMessage({ ok: true, hint: "Успешно." });
+        } else {
+            setMessage({ ok: false, hint: "Не удалось создать игру." });
+        }
+    };
+
+    const onInvite = async (email) => {
+        setMessage({ ok: false, hint: null });
+        const response = await inviteUser({ authToken: token, groupId: id, email: email });
+
+        if (response === undefined) {
+            setMessage({ ok: false, hint: "Попробуйте в другой раз." });
             return;
         }
 
-        loadGame();
+        if (!response.ok) {
+            setMessage({ ok: false, hint: "Не удалось пригласить пользователя. Возможно, почта некорректна." });
+            return;
+        }
+
+        setMessage({ ok: true, hint: "Успешно." });
     };
 
-    const memberMapper = (member) =>
-        <div className='KeyValue ListRow' key={member.id}>
-            {member.name}
-            <button onClick={() => onBan(member.banned, member.id)}>
-                {
-                    member.banned ? <>Разблокировать</> : <>Заблокировать</>
-                }
-            </button>
-        </div>;
+    const fragments = [
+        <GamesAdminFragment
+            currentGame={ groupAdminData.currentGame }
+            results={ groupAdminData.results }
+            quizzes={ groupAdminData.quizzes }
+            onCreateGame={ onCreateGame } />,
+        <MembersAdminFragment
+            members={ groupAdminData.members }
+            groupToken={ groupAdminData.groupToken }
+            onBan={ onBan }
+            onUnban={ onUnban }
+            onInvite={ onInvite } />,
+        <ChatFragment />
+    ];
 
-    const membersCards = data.members ? data.members.map(memberMapper) : data.members;
+    const onCategorySelect = (index) => {
+        setCategoryIndex(index);
+    };
 
-    const historyMapper = (h) => <li key={h.id}>{h.name} {h.date} <Link to={`/history/${h.id}`}>h.id</Link></li>;
-    const historyCards = data.history ? data.history.map(historyMapper) : data.history;
-    const quizMapper = (q) => <option key={q.id} value={q.id}>{q.name}</option>;
-    const options = data.quizzes ? data.quizzes.map(quizMapper) : data.quizzes;
-
-    const joinUrl = `http://localhost:3000/groups/join/${data.token}`;
+    if (categoryIndex === categories.length - 1) {
+        return <Navigate to="/profile" />;
+    }
 
     return (
-        <div className='ProfileLayout'>
-            <div className='ProfileNavigation'>
-                <div className='ProfileNavigation-Logo'></div>
-                <div className='ProfileNavigation-Categories'>
-                    <Link to={`/groups/my/${id}?p=games`}>Игры</Link>
-                    <Link to={`/groups/my/${id}?p=members`}>Участники</Link>
-                    <Link to={`/groups/my/${id}?p=chat`}>Чат</Link>
-                </div>
-                <div className='ProfileNavigation-Quit'>
-                    <Link to='/me/profile'>Профиль</Link>
-                </div>
+        <div className="ProfileLayout">
+            <div className="ProfileNavigation">
+                <SideNavigationFragment
+                    categories={ categories }
+                    selectedIndex={ categoryIndex }
+                    onSelect={ onCategorySelect } />
             </div>
-            <div className='ProfileMain'>
-                {
-                    category === 'games' ?
-                    <div className='List'>
-                        <h1>Текущая игра</h1>
-                        {
-                            data.game === 'loading' ? <>...</> :
-                            data.game === undefined ? <>Не удалось загрузить</> :
-                            data.game === null ?
-                            <form className='Horizontal' onSubmit={onCreateGame}>
-                                <select name='select' id="cars">
-                                    {
-                                        options
-                                    }
-                                </select>
-                                <SubmitButton title='Создать игру' />
-                            </form> :
-                            <Link className='Card' to={`/games/test/${data.game.game_id}`}>
-                                {data.game.quiz_name}
-                            </Link>
-                        }
-                        <h1>История</h1>
-                        {
-                            historyCards === null ? <>...</> :
-                            historyCards === undefined ? <>Не удалось загрузить квизы</> :
-                            historyCards.length === 0 ? <>Пусто</> :
-                            historyCards
-                        } 
-                    </div> :
-                    category === 'members' ?
-                    <div className='List'>
-                        <h1>Участники</h1>
-                        <CopyBox text={joinUrl} />
-                        <QRCode value={joinUrl} size={128} />
-                        {
-                            membersCards === null ? <>...</> :
-                            membersCards === undefined ? <>Не удалось загрузить участников</> :
-                            membersCards.length === 0 ? <>Пусто</> :
-                            membersCards
-                        }
-                    </div> :
-                    category === 'chat' ?
-                    <div className='List'>
-                        <h1>Чат</h1>
-                    </div> :
-                    <>Такой категории нет</>
-                }
+            <div className="ProfileMain">
+                { fragments[categoryIndex] }
             </div>
+            {
+                message.hint && <Notification message={ message.hint } isError={ !message.ok } />
+            }
         </div>
     );
 }

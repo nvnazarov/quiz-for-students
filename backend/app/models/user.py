@@ -12,4 +12,4 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(100))
     email: Mapped[str] = mapped_column(String(255), unique=True)
     hashed_password: Mapped[str] = mapped_column(String)
-    active: Mapped[bool] = mapped_column(default=True)
+    active: Mapped[bool] = mapped_column(default=False)

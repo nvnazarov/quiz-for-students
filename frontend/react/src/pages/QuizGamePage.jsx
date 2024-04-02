@@ -1,9 +1,10 @@
 const QuizGamePage = () => {
     return (
         <>
-            Quiz game
+            Пока не доступно.
         </>
-    )
-}
+    );
+};
 
-export default QuizGamePage
+
+export default QuizGamePage;

@@ -1,157 +1,150 @@
-import { useContext, useState } from 'react';
-import { UserContext } from '../contexts/UserContext.jsx';
-import { apiUrl } from '../config.js';
-import { Link, Navigate } from 'react-router-dom';
-import { useProfileData } from '../hooks/Profile.jsx';
-import TextField from '../components/ui/TextField.jsx';
-import SubmitButton from '../components/ui/SubmitButton.jsx';
-import ReloadBox from '../components/ui/ReloadBox.jsx';
-import { toGroupCard, toMyGroupCard, checkMap, toQuizCard } from '../mappers/Mappers.jsx';
-import { useParams } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { UserContext } from "../contexts/UserContext";
+import SideNavigationFragment from "../components/fragments/SideNavigationFragment";
+import ProfileFragment from "../components/fragments/profile/ProfileFragment";
+import QuizzesFragment from "../components/fragments/profile/QuizzesFragment";
+import GroupsFragment from "../components/fragments/profile/GroupsFragment";
+import OwnedGroupsFragment from "../components/fragments/profile/OwnedGroupsFragment";
+import { useProfileData } from "../hooks/profile";
+import { updateUser } from "../api/user";
+import { createGroup, joinByInvite, cancelInvite } from "../api/group";
+import InvitesFragment from "../components/fragments/profile/InvitesFragment";
+import Notification from "../components/ui/Notification";
 
 
 const ProfilePage = () => {
     const [token, setToken] = useContext(UserContext);
-    const [profileData, loadUser, loadGroups, loadMyGroups, loadQuizzes] = useProfileData(token);
-    const [newName, setNewName] = useState('');
-    const [newGroupName, setNewGroupName] = useState('');
-    const {category} = useParams();
-
-    if (!token) {
-        return <Navigate to='/login' />
-    }
-
-    const onChangeName = async (e) => {
-        e.preventDefault();
-
-        const fetchRequest = {
-            method: 'POST',
-            headers: {
-                token: token,
-            }
-        };
-
-        const response = await fetch(`${apiUrl}/users/name/${newName}`, fetchRequest).catch(() => {});
-
-        if (response === undefined || !response.ok) {
-            // TODO
+    const [categoryIndex, setCategoryIndex] = useState(0);
+    const profileData = useProfileData(token);
+    const [ message, setMessage ] = useState(
+        {
+            ok: false,
+            hint: null,
         }
+    );
 
-        loadUser();
+    const categories = [
+        "Профиль",
+        "Квизы",
+        "Группы",
+        "Мои группы",
+        "Приглашения",
+        "Выйти",
+    ];
+
+    const onUpdateUserName = async (newUserName) => {
+        const data = {
+            authToken: token,
+            name: newUserName,
+        };
+        const response = await updateUser(data);
+
+        if (response !== undefined && response.ok) {
+            profileData.setUser(
+                {
+                    name: newUserName,
+                    email: profileData.user.email,
+                }
+            );
+        }
     };
 
-    const onCreateGroup = async (e) => {
-        e.preventDefault();
-
-        const fetchRequest = {
-            method: 'POST',
-            headers: {
-                token: token,
-            }
+    const onCreateNewGroup = async (newGroupName) => {
+        const data = {
+            authToken: token,
+            name: newGroupName,
         };
+        const response = await createGroup(data);
 
-        const response = await fetch(`${apiUrl}/groups/create/${newGroupName}`, fetchRequest).catch(() => {});
+        if (response !== undefined && response.ok) {
+            profileData.loadMyGroups();
+        }
+    };
 
-        if (response === undefined || !response.ok) {
-            // TODO
+    const onJoinByInvite = async (id) => {
+        setMessage({ ok: false, hint: null });
+        const response = await joinByInvite({ authToken: token, inviteId: id });
+
+        if (response === undefined) {
+            setMessage({ ok: false, hint: "Попробуйте в другой раз." });
+            return;
         }
 
-        loadMyGroups();
+        if (!response.ok) {
+            setMessage({ ok: false, hint: "Не удалось вступить в группу." });
+            return;
+        }
+
+        setMessage({ ok: true, hint: "Успешно." });
+        profileData.loadInvites();
+        profileData.loadGroups();
+    };
+
+    const onCancelInvite = async (id) => {
+        setMessage({ ok: false, hint: null });
+        const response = await cancelInvite({ authToken: token, inviteId: id });
+
+        if (response === undefined) {
+            setMessage({ ok: false, hint: "Попробуйте в другой раз." });
+            return;
+        }
+
+        if (!response.ok) {
+            setMessage({ ok: false, hint: "Не удалось отклонить приглашение." });
+            return;
+        }
+
+        setMessage({ ok: true, hint: "Успешно." });
+        profileData.loadInvites();
+    };
+
+    const onUpdateInvites = () => {
+        profileData.loadInvites();
+    };
+
+    const fragments = [
+        <ProfileFragment
+            userName={ profileData.user.name }
+            userEmail={ profileData.user.email }
+            onUpdateUserName={ onUpdateUserName } />,
+        <QuizzesFragment quizzes={ profileData.quizzes } />,
+        <GroupsFragment groups={ profileData.groups } />,
+        <OwnedGroupsFragment groups={ profileData.myGroups } onCreateNewGroup={ onCreateNewGroup } />,
+        <InvitesFragment
+            invites={ profileData.invites }
+            onJoinByInvite={ onJoinByInvite }
+            onCancelInvite={ onCancelInvite }
+            onUpdate={ onUpdateInvites } />
+
+    ];
+
+    const onCategorySelect = (index) => {
+        setCategoryIndex(index);
+    };
+
+    if (categoryIndex === categories.length - 1) {
+        setToken(null);
+        return <Navigate to="/login" />;
     }
 
-    const quizElements = checkMap(
-        profileData.quizzes,
-        toQuizCard,
-        '...',
-        'Не получилось загрузить',
-        'Вы еще не создавали квизы или викторины'
-    );
-
-    const groupElements = checkMap(
-        profileData.groups,
-        toGroupCard,
-        '...',
-        'Не получилось загрузить',
-        'Вы еще не вступили ни в одну группу'
-    );
-
-    const myGroupElements = checkMap(
-        profileData.myGroups,
-        toMyGroupCard,
-        '...',
-        'Не получилось загрузить',
-        'Вы еще не создавали группы'
-    );
-
     return (
-        <div className='ProfileLayout'>
-            <div className='ProfileNavigation'>
-                <div className='ProfileNavigation-Logo'></div>
-                <div className='ProfileNavigation-Categories'>
-                    <Link to='/me/profile'>Профиль</Link>
-                    <Link to='/me/quizzes'>Квизы</Link>
-                    <Link to='/me/groups'>Группы</Link>
-                    <Link to='/me/owned'>Мои группы</Link>
-                </div>
-                <div className='ProfileNavigation-Quit'>
-                    <Link to='/login' onClick={() => setToken(null)}>Выйти</Link>
-                </div>
+        <div className="ProfileLayout">
+            <div className="ProfileNavigation">
+                <SideNavigationFragment
+                    categories={ categories }
+                    selectedIndex={ categoryIndex }
+                    onSelect={ onCategorySelect } />
             </div>
-            <div className='ProfileMain'>
-                {
-                    category === 'profile' ?
-                    <div className='List'>
-                        <h1>Профиль</h1>
-                        
-                        Имя: {profileData.user ? profileData.user.name : '...'}<br/>
-                        Почта: {profileData.user ? profileData.user.email : '...'}
-
-                        <form className='Horizontal' onSubmit={onChangeName}>
-                            <TextField text={newName} setText={setNewName} placeholder='Новое имя' />
-                            <SubmitButton title='Сохранить' />
-                        </form>
-                    </div> :
-                    category === 'quizzes' ?
-                    <div className='List'>
-                        <h1>Квизы</h1>
-                        <div className='Horizontal'>
-                            <Link className='Button' to='/constructor/test'>Добавить квиз</Link>
-                            <Link className='Button' to='/constructor/test'>Добавить викторину</Link>
-                        </div>
-                        <div className='Grid'>
-                            {
-                                quizElements
-                            }
-                        </div>
-                    </div> :
-                    category === 'groups' ?
-                    <div className='List'>
-                        <h1>Группы</h1>
-                        <div className='Grid'>
-                            {
-                                groupElements
-                            }
-                        </div>
-                    </div> :
-                    category === 'owned' ?
-                    <div className='List'>
-                        <h1>Мои группы</h1>
-                        <form className='Horizontal' onSubmit={onCreateGroup}>
-                            <TextField text={newGroupName} setText={setNewGroupName} placeholder='Название группы' />
-                            <SubmitButton title='Создать' />
-                        </form>
-                        <div className='Grid'>
-                            {
-                                myGroupElements
-                            }
-                        </div>
-                    </div> :
-                    'no such category'
-                }
+            <div className="ProfileMain">
+                { fragments[categoryIndex] }
             </div>
+            {
+                message.hint && <Notification message={ message.hint } isError={ !message.ok } />
+            }
         </div>
     );
-}
+};
 
 
 export default ProfilePage;

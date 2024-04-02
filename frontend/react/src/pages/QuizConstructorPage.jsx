@@ -1,48 +1,13 @@
-import { useState } from 'react'
+import { Link } from "react-router-dom";
+
 
 const QuizConstructorPage = ({ onFinish }) => {
-    const [commonData, setCommonData] = useState(
-        {
-            rows: 5,
-            columns: 5
-        }
-    )
-    const [themes, setThemes] = useState([])
-    const [questionsData, setQuestionsData] = useState([])
-
-    const onAddTheme = () => {
-
-    }
-
-    const onFinishQuizConstruction = () => {
-        const response = fetch(
-            'api/v1/quiz/',
-            {
-                method: 'POST',
-                body: {
-                    themes: themes,
-                    questions: questionsData,               
-                }
-            }
-        )
-
-        if (!response.ok) {
-            // TODO
-        } else {
-            onFinish()
-        }
-    }
-
-    const questionsCells = questionsData.map((data) => <div>data.cost</div>)
-
+    
     return (
-        <>
-            <div>
-                { questionsCells }
-            </div>
-            <button onClick={ onAddTheme }>add theme</button>
-            <button onClick={ onFinishQuizConstruction }>finish</button>
-        </>
+        <div className="Vertical GapSmall">
+            Пока не реализовано.
+            <Link to="/profile">Назад</Link>
+        </div>
     )
 }
 

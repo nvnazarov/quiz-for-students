@@ -1,4 +1,6 @@
 import {useState} from 'react';
+import NumberField from "../ui/NumberField";
+import TextField from "../ui/TextField";
 
 
 const MultipleAnswerCard = ({id, data, setData, onDelete}) => {
@@ -8,7 +10,7 @@ const MultipleAnswerCard = ({id, data, setData, onDelete}) => {
         const mapper = (a, index) => {
             if (data.correct.includes(index)) {
                 return (
-                    <li key={index}>
+                    <li key={index} className="AnswerBox">
                         <input value={a} onChange={(e) => {
                             const newAnswers = data.answers.map((ans, i) => {
                                 if (i === index) {
@@ -18,18 +20,19 @@ const MultipleAnswerCard = ({id, data, setData, onDelete}) => {
                                 }
                             });
                             setData(id, {...data, answers: newAnswers});
-                        }} /> (correct)
+                        }} />
+                        Этот ответ верный
                         <button onClick={() =>
                             {
                                 const newCorrect = data.correct.filter((idx) => idx !== index);
                                 setData(id, {...data, correct: newCorrect});
                             }
-                        }>не этот</button>
+                        }>Неверный</button>
                     </li>
                 );
             }
             return (
-                <li key={index}>
+                <li key={index} className="AnswerBox">
                     <input value={a} onChange={(e) => {
                         const newAnswers = data.answers.map((ans, i) => {
                             if (i === index) {
@@ -40,12 +43,13 @@ const MultipleAnswerCard = ({id, data, setData, onDelete}) => {
                         });
                         setData(id, {...data, answers: newAnswers});
                     }} />
+                    Этот ответ неверный
                     <button onClick={() =>
                         {
                             const newCorrect = [...data.correct, index];
                             setData(id, {...data, correct: newCorrect});
                         }
-                    }>этот</button>
+                    }>Верный</button>
                 </li>
             );
         }
@@ -53,38 +57,49 @@ const MultipleAnswerCard = ({id, data, setData, onDelete}) => {
         const answersElements = data.answers.map(mapper);
 
         return (
-            <>
-                Несколько вариантов ответа
+            <div className="QuestionBoxExpanded">
+                <div className="ParamsBox">
+                    <div className="StartEnd VerticalCentered GapMid">
+                        Время
+                        <NumberField number={ data.time } setNumber={ (value) => setData(id, {...data, time: value}) } />
+                    </div>
+                    <div className="StartEnd VerticalCentered GapMid">
+                        Очки
+                        <NumberField number={ data.points } setNumber={ (value) => setData(id, {...data, points: value}) } />
+                    </div>
+                    <div className="StartEnd VerticalCentered GapMid">
+                        Изображение
+                        <input type="file" />
+                    </div>
+                </div>
 
-                <br/>Время: <input type='number' value={data.time} onChange={(e) => setData(id, {...data, time: e.target.value})} />
-                <br/>Очки: <input type='number' value={data.points} onChange={(e) => setData(id, {...data, points: e.target.value})} />
-                <br/>Текст: <input type='text' value={data.text} onChange={(e) => setData(id, {...data, text: e.target.value})} />
-                <br/>Изображение: <input type='image' onChange={(e) => setData(id, {...data, image: e.target.value})} />
-                <br/>
+                <input
+                    className="QuestionEdit"
+                    value={ data.title }
+                    onChange={ (e) => setData(id, {...data, title: e.target.value}) }
+                    placeholder="Напишите вопрос" />
                 
-                <ul>
-                    {
-                        answersElements
-                    }
-                </ul>
+                <div className="QuestionAnswersContainer">{ answersElements }</div>
 
-                <button onClick={() => onDelete(id)}>Удалить</button>
-
-                <button onClick={() => setExpanded(false)}>Свернуть</button>
-            </>
+                <div className="QuestionExpanded-Actions">
+                    <button onClick={ () => onDelete(id) }>Удалить</button>
+                    <button onClick={ () => setExpanded(false) }>Свернуть</button>
+                </div>
+            </div>
         );
     }
 
     return (
-        <div className='QuestionContainer'>
-            <span className='QuestionTitle'>Несколько ответов</span>
-            <div className='QuestionParams'>
-                <span className='Param'>{data.time} сек.</span>
-                <span className='Param'>{data.points} очков</span>
+        <div className="QuestionBox Horizontal">
+            <div className="Horizontal GapSmall">
+                <span className="Param">Несколько ответов</span>
+                <span className="Param">{data.time} сек</span>
+                <span className="Param">{data.points} очков</span>
+                <span className="TextParam">{data.title.substr(0, 40) + "..."}</span>
             </div>
-            <div className='QuestionActions'>
-                <button onClick={() => onDelete(id)}>Удалить</button>
-                <button onClick={() => setExpanded(true)}>Развернуть</button>
+            <div className="Horizontal GapSmall">
+                <button onClick={ () => onDelete(id) }>Удалить</button>
+                <button onClick={ () => setExpanded(true) }>Развернуть</button>
             </div>
         </div>
     );

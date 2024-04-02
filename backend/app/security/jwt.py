@@ -14,14 +14,15 @@ class JwtContext(TokenContext):
     _expire: timedelta = None
     
     
-    def __init__(self, key: str, algorithm: str, expire: timedelta):
+    def __init__(self, key: str, algorithm: str, expire: timedelta = None):
         self._key = key
         self._algorithm = algorithm
         self._expire = expire
 
 
     def encode(self, claims: MutableMapping[str, Any]) -> str:
-        claims.update(exp=self._get_expire_time())
+        if self._expire:
+            claims.update(exp=self._get_expire_time())
         return jwt.encode(claims, self._key, self._algorithm)
 
 
