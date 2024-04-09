@@ -1,10 +1,11 @@
 import { createContext, useEffect, useState } from "react";
 import { getUser } from "../api/user";
+import { Navigate } from "react-router-dom";
 
 const UserContext = createContext([null, null]);
 
 const UserContextProvider = ({ children }) => {
-    const [token, setToken] = useState(localStorage.getItem("token"));
+    const [token, setToken] = useState(undefined);
 
     const setAndStoreToken = (token) => {
         if (token) {
@@ -17,22 +18,33 @@ const UserContextProvider = ({ children }) => {
 
     useEffect(() => {
         const checkToken = async () => {
+            const savedToken = localStorage.getItem("token");
             const data = {
-                authToken: token,
+                authToken: savedToken,
             };
             const response = await getUser(data);
 
             if (response === undefined || !response.ok) {
                 setAndStoreToken(null);
+            } else {
+                setAndStoreToken(savedToken);
             }
         };
 
         checkToken();
     }, []);
 
+    if (token === undefined) {
+        return (
+            <>
+                Loading
+            </>
+        );
+    }
+
     return (
         <UserContext.Provider value={[token, setAndStoreToken]}>
-            {children}
+            { children }
         </UserContext.Provider>
     );
 };

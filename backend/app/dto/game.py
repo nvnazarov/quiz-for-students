@@ -23,3 +23,11 @@ class GameMemberDto:
         self.name = name
         self.email = email
         self.socket = socket
+    
+    
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+        }

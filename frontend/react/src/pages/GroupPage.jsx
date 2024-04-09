@@ -22,7 +22,11 @@ const GroupPage = () => {
     ];
 
     const fragments = [
-        <GamesFragment currentGame={ groupData.currentGame } results={ groupData.results } />,
+        <GamesFragment
+        currentGame={ groupData.currentGame }
+        results={ groupData.results }
+        members={ groupData.members }
+        quizzes={ groupData.quizzes } />,
         <MembersFragment members={ groupData.members } />,
         <ChatFragment />
     ];

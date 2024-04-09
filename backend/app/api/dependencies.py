@@ -16,6 +16,7 @@ from app.security.jwt import JwtContext
 from app.services.email import EmailService
 from app.services.chat import ChatService
 from app.repos.sql.chat import SqlChatRepository
+from app.repos.sql.result import SqlResultRepository
 
 
 _user_service = UserService(SqlUserRepository(),
@@ -28,6 +29,7 @@ _user_service = UserService(SqlUserRepository(),
 
 _group_service = GroupService(SqlGroupRepository(),
                               SqlUserRepository(),
+                              SqlResultRepository(),
                               JwtContext(key=os.getenv("QFS_GROUP_TOKEN_KEY"),
                                          algorithm=os.getenv("QFS_GROUP_TOKEN_ALGO"),
                                          expire=timedelta(minutes=int(os.getenv("QFS_GROUP_TOKEN_EXPIRE_MINUTES")))
@@ -38,7 +40,9 @@ _quiz_service = QuizService(SqlQuizRepository())
 
 _game_service = GameService(SqlGroupRepository(),
                             SqlQuizRepository(),
-                            SqlUserRepository())
+                            SqlUserRepository(),
+                            SqlResultRepository(),
+                            )
 
 _email_service = EmailService(JwtContext(key=os.getenv("QFS_EMAIL_TOKEN_KEY"),
                                          algorithm=os.getenv("QFS_EMAIL_TOKEN_ALGO"),

@@ -4,28 +4,29 @@ from sqlalchemy.exc import IntegrityError
 from app.security.token import TokenContext
 from app.repos.group import GroupRepository
 from app.repos.user import UserRepository
-from app.dto.group import GroupCreateDto
-from app.dto.group import GroupDto
-from app.dto.group import GroupJoinDto
-from app.dto.group import to_group_dto
-from app.dto.member import MemberDto
-from app.dto.member import MemberOnlyDto
-from app.dto.member import to_member_only_dto
+from app.dto.group import GroupCreateDto, GroupDto, GroupJoinDto, InviteDto, to_group_dto
+from app.dto.member import MemberDto, MemberOnlyDto, to_member_only_dto
 from app.dto.result import ResultDto
-from app.dto.group import InviteDto
-from app.dto.group import to_invite_dto
+from app.repos.result import ResultRepository
 
 
 class GroupService:
     _repo: GroupRepository = None
     _user_repo: UserRepository = None
-    _token_context: TokenContext = None 
+    _result_repo: ResultRepository = None
+    _token_context: TokenContext = None
 
 
-    def __init__(self, repo: GroupRepository, user_repo: UserRepository, token_context: TokenContext):
+    def __init__(self,
+                 repo: GroupRepository,
+                 user_repo: UserRepository,
+                 result_repo: ResultRepository,
+                 token_context: TokenContext,
+                 ):
         self._repo = repo
         self._user_repo = user_repo
         self._token_context = token_context
+        self._result_repo = result_repo
 
 
     async def create_group(self, group: GroupCreateDto) -> GroupDto:
@@ -123,7 +124,7 @@ class GroupService:
         if db_group.admin_id != user_id and not any(map(lambda m: m.id == user_id and not m.banned, members)):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="not a member or banned")
         
-        history = await self._repo.get_history(group_id)
+        history = await self._result_repo.get_results(group_id)
         return history
 
 

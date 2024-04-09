@@ -13,8 +13,8 @@ router = APIRouter(
 
 @router.post("/create")
 async def create_game(dto: GameCreateDto,
-                     user_id: int = Depends(get_current_user_id)
-                     ):
+                      user_id: int = Depends(get_current_user_id)
+                      ):
     game_id = await get_game_service().create_game(dto, user_id)
     return game_id
 

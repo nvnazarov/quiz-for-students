@@ -154,6 +154,116 @@ h2 {
     flex-direction: row;
     justify-content: space-between;
 }
+.centered {
+    margin-top: 50%;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
+}
+.box {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+.q-answers-container {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+.text-centered {
+    text-align: center;
+}
+
+.bar-container {
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 0.5rem; 
+}
+
+.bar-label-container {
+    padding: 1rem;
+    background-color: #eee;
+    max-width: 200px;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.bar-value-container {
+    padding: 1rem;
+    background-color: #faa;
+    max-width: 200px;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.bar-value-container-true {
+    padding: 1rem;
+    background-color: #afa;
+    max-width: 200px;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.stats-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.answer {
+    text-decoration: none;
+    color: black;
+    display: inline-block;
+    width: 300px;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #eee;
+    transition-duration: 0.2s;
+    border: 2px solid transparent;
+}
+
+.answer-locked {
+    text-decoration: none;
+    color: black;
+    display: inline-block;
+    width: 300px;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #eee;
+    transition-duration: 0.2s;
+    border: 2px solid transparent;
+}
+
+.answer:hover {
+    border: 2px solid rgb(46, 46, 172);
+    transform: scale(1.02, 1.02);
+}
+
+.answer-selected {
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    width: 300px;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #4a4;
+    transition-duration: 0.2s;
+    border: 2px solid transparent;
+}
+
+.answer-selected-locked {
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    width: 300px;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: rgb(25, 61, 25);
+    transition-duration: 0.2s;
+    border: 2px solid transparent;
+}
 
 /* Icons */
 .Icon {
@@ -358,4 +468,16 @@ select:hover {
 .MessageDate {
     font-size: 0.9rem;
     color: #ccc;
+}
+
+td {
+    padding: 0.5rem;
+    background-color: #eee;
+}
+
+th {
+    padding: 0.5rem;
+    font-weight: normal;
+    color: white;
+    background-color: rgb(46, 46, 172);
 }

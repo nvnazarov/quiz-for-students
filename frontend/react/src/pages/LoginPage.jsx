@@ -27,12 +27,12 @@ const LoginPage = () => {
         await new Promise((resolve) => resolve(undefined));
 
         if (email === "") {
-            setFormInfo({ ok: false, isSended: true, hint: "Укажите почту." });
+            setFormInfo({ ok: false, isSended: false, hint: "Укажите почту." });
             return;
         }
 
         if (password === "") {
-            setFormInfo({ ok: false, isSended: true, hint: "Укажите пароль." });
+            setFormInfo({ ok: false, isSended: false, hint: "Укажите пароль." });
             return;
         }
 

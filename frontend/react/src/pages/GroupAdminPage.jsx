@@ -65,6 +65,13 @@ const GroupAdminPage = () => {
     };
 
     const onCreateGame = async (quizId) => {
+        if (!quizId) {
+            setMessage({ ok: false, hint: null });
+            await new Promise((resolve) => resolve(undefined));
+            setMessage({ ok: false, hint: "Не удалось создать игру. Не выбран квиз." });
+            return;
+        }
+
         const data = {
             authToken: token,
             groupId: id,
@@ -98,10 +105,13 @@ const GroupAdminPage = () => {
         setMessage({ ok: true, hint: "Успешно." });
     };
 
+    console.log(groupAdminData.results);
+
     const fragments = [
         <GamesAdminFragment
             currentGame={ groupAdminData.currentGame }
             results={ groupAdminData.results }
+            members={ groupAdminData.members }
             quizzes={ groupAdminData.quizzes }
             onCreateGame={ onCreateGame } />,
         <MembersAdminFragment

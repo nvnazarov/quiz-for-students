@@ -19,7 +19,7 @@ const createTest = async ({ authToken, name, data }) => {
         },
         body: JSON.stringify(body),
     };
-    const response = await fetch(`${apiUrl}/quizzes/create/test`, requestParams);
+    const response = await fetch(`${apiUrl}/quizzes/create/test`, requestParams).catch(() => undefined);
     return response;
 };
 
@@ -42,7 +42,7 @@ const updateTest = async ({ authToken, id, data }) => {
         },
         body: JSON.stringify(body),
     };
-    const response = await fetch(`${apiUrl}/quizzes/update/test`, requestParams);
+    const response = await fetch(`${apiUrl}/quizzes/update/test`, requestParams).catch(() => undefined);
     return response;
 };
 
@@ -53,7 +53,7 @@ const getAllQuizzes = async ({ authToken }) => {
             token: authToken,
         },
     };
-    const response = await fetch(`${apiUrl}/quizzes/my`, requestParams);
+    const response = await fetch(`${apiUrl}/quizzes/my`, requestParams).catch(() => undefined);
     return response;
 };
 
@@ -64,7 +64,7 @@ const getQuizData = async ({ authToken, id }) => {
             token: authToken,
         },
     };
-    const response = await fetch(`${apiUrl}/quizzes/${id}`, requestParams);
+    const response = await fetch(`${apiUrl}/quizzes/${id}`, requestParams).catch(() => undefined);
     return response;
 };
 

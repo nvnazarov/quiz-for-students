@@ -35,10 +35,12 @@ class ChatRoom:
     
     
     async def connect(self, member: ChatRoomMemberDto):
-        await member.socket.accept()
         self._add_member(member)
         
+        print(self._members)
+        
         try:
+            await member.socket.accept()
             text = await member.socket.receive_text()
             try:
                 date = datetime.now()
@@ -74,14 +76,14 @@ class ChatService:
         self._chat_repo = chat_repo
         self._group_repo = group_repo
         self._user_repo = user_repo
-        
+    
     
     async def get_all_messages(self, group_id: int, user_id: int) -> list[MessageDto]:
         db_group = await self._group_repo.find_by_id(group_id)
         if not db_group:
             raise HTTPException(status.HTTP_404_NOT_FOUND,
                                 "Group not found")
-            
+        
         members = await self._group_repo.get_group_members(group_id)
         if not db_group.admin_id == user_id and not any(map(lambda m: m.id == user_id and not m.banned, members)):
             raise HTTPException(status.HTTP_403_FORBIDDEN,
@@ -111,7 +113,7 @@ class ChatService:
                                    name=db_user.name,
                                    socket=socket)
         
-        if group_id not in self._rooms:    
+        if group_id not in self._rooms:
             self._rooms[group_id] = ChatRoom(self._chat_repo, group_id)
         
         await self._rooms[group_id].connect(member)

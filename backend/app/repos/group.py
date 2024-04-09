@@ -49,11 +49,6 @@ class GroupRepository(ABC):
     
     
     @abstractmethod
-    async def get_history(self, group_id: int) -> list[ResultDto]:
-        raise NotImplementedError
-    
-    
-    @abstractmethod
     async def find_invite_by_id(self, id: int) -> Invite | None:
         raise NotImplementedError
     

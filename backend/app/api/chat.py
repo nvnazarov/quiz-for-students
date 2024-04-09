@@ -25,4 +25,4 @@ async def connect_to_chat(group_id: int,
 async def get_all_messages(group_id: int,
                            user_id: int = Depends(get_current_user_id)):
     messages = await get_chat_service().get_all_messages(group_id, user_id)
-    return messages[:5]
+    return messages[-5:]

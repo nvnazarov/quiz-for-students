@@ -4,6 +4,13 @@ from datetime import datetime
 from typing import Any
 
 
+class ResultCreateDto(BaseModel):
+    date: datetime
+    quiz_id: int
+    group_id: int
+    scores: dict[int, Any]
+
+
 class ResultDto(BaseModel):
     date: datetime
     quiz_id: int

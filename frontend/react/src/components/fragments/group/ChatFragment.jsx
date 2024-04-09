@@ -16,7 +16,7 @@ const ChatFragment = () => {
     const [ socket, setSocket ]  = useState(null);
 
     useEffect(() => {
-        let ws = null
+        let ws = null;
 
         const connect = async () => {
             setMessage({ ok: false, hint: null });
@@ -25,7 +25,7 @@ const ChatFragment = () => {
             if (response === undefined || !response.ok) {
                 setMessage({ ok: false, hint: "Не удалось загрузить историю сообщений" });
             } else {
-                const msgs = await response.json()
+                const msgs = await response.json();
                 msgs.reverse();
                 setMessages(msgs);
             }
@@ -34,14 +34,14 @@ const ChatFragment = () => {
 
             ws.onmessage = async (e) => {
                 const msg = JSON.parse(e.data);
+
+                console.log(msg);
+
                 if (msg.what) {
-                    // setMessage({ ok: false, hint: null });
-                    // await new Promise((resolve) => resolve(undefined));
                     setMessage({ ok: false, hint: "Не удалось отправить сообщение." });
                 } else {
                     setMessages((m) => [ msg, ...m  ]);
                 }
-            
             };
 
             ws.onclose = () => {
