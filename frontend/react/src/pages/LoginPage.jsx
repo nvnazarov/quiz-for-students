@@ -1,46 +1,44 @@
 import { useState, useContext } from "react";
-import { UserContext } from "../contexts/UserContext";
 import { Link, Navigate } from "react-router-dom";
-import { authUser } from "../api/user"; 
-import SubmitButton from "../components/ui/SubmitButton";
-import TextField from "../components/ui/TextField";
-import PasswordField from "../components/ui/PasswordField";
-import Notification from "../components/ui/Notification";
+
+import { UserContext } from "../contexts/UserContext";
+import { authUser } from "../api/user";
+import { NotificationContext } from "../contexts/NotificationContext";
+import Button from "../components/Button";
+import TextField from "../components/TextField";
+import "../styles/common.css";
 
 
 const LoginPage = () => {
+    const notificationService = useContext(NotificationContext);
     const [token, setToken] = useContext(UserContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [formInfo, setFormInfo] = useState(
-        {
-            ok: false,
-            hint: null,
-            isSended: false
-        }
-    );
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        setFormInfo({ ok: false, isSended: true, hint: null });
-        await new Promise((resolve) => resolve(undefined));
+        if (loading) {
+            return;
+        }
 
         if (email === "") {
-            setFormInfo({ ok: false, isSended: false, hint: "Укажите почту." });
+            notificationService.addNotification("Укажите почту.");
             return;
         }
 
         if (password === "") {
-            setFormInfo({ ok: false, isSended: false, hint: "Укажите пароль." });
+            notificationService.addNotification("Укажите пароль.");
             return;
         }
 
-
+        setLoading(true);
         const response = await authUser({ email, password });
+        setLoading(false);
 
         if (response === undefined) {
-            setFormInfo({ ok: false, isSended: false, hint: "Попробуйте в другой раз" });
+            notificationService.addNotification("Попробуйте в другой раз.");
             return;
         }
 
@@ -48,7 +46,7 @@ const LoginPage = () => {
             const authToken = await response.json(); 
             setToken(authToken);
         } else {
-            setFormInfo({ ok: false, isSended: false, hint: "Пароль или почта неверны" });
+            notificationService.addNotification("Пароль или почта неверны.");
         }
     }
 
@@ -57,26 +55,20 @@ const LoginPage = () => {
     }
 
     return (
-        <>
-            <form className="Centered Box" onSubmit={ onSubmit }>
-                <div className="List Mid">
-                    <h1>Авторизация</h1>
-                    <TextField placeholder="Почта" text={ email } setText={ setEmail } />
-                    <PasswordField placeholder="Пароль" text={ password } setText={ setPassword } />
-                    <div>
-                        <SubmitButton isLoading={ formInfo.isSended } title="Войти" />
-                    </div>
-                    <hr/>
-                    <Link to="/register">Создать аккаунт</Link>
-                </div>
-            </form>
-
-            {
-                formInfo.hint && <Notification message={ formInfo.hint } isError={ !(formInfo.ok) } />
-            }
-        </>
+        <form className="Centered box r-lg p-lg w-md" onSubmit={ onSubmit }>
+            <div className="v gap-md ta-center">
+                <h1>Авторизация</h1>
+                <p className="mg-md">
+                    Войдите в свой аккаунт, указав почту и пароль.
+                    Если у вас еще нет аккаунта, создайте его <Link to="/register">здесь</Link>.
+                </p>
+                <TextField placeholder="Почта" text={ email } setText={ setEmail } />
+                <TextField placeholder="Пароль" type="password" text={ password } setText={ setPassword } />
+                <Button loading={ loading }>Войти</Button>
+            </div>
+        </form>
     );
-}
+};
 
 
 export default LoginPage;

@@ -50,7 +50,7 @@ const SingleAnswerCard = ({ id, data, setData, onDelete }) => {
                     </div>
                     <div className="StartEnd VerticalCentered GapMid">
                         Изображение
-                        <input type="file" />
+                        <input onChange={ (e) => console.log(e.target.value) } type="file" />
                     </div>
                 </div>
 

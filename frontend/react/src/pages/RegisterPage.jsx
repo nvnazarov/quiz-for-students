@@ -1,108 +1,80 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+
 import { registerUser } from "../api/user.js";
-import SubmitButton from "../components/ui/SubmitButton";
-import TextField from "../components/ui/TextField";
-import PasswordField from "../components/ui/PasswordField";
-import Notification from "../components/ui/Notification";
+import { NotificationContext } from "../contexts/NotificationContext";
+import Button from "../components/Button";
+import TextField from "../components/TextField";
 
 
 const RegisterPage = () => {
+    const notificationService = useContext(NotificationContext);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [formInfo, setFormInfo] = useState(
-        {
-            ok: false,
-            hint: null,
-            isSended: false
-        }
-    );
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        setFormInfo({ ok: false, isSended: true, hint: null });
-        await new Promise((resolve) => resolve(undefined));
+        if (loading) {
+            return;
+        }
 
         if (name === "") {
-            setFormInfo({ ok: false, isSended: true, hint: "Укажите имя." });
+            notificationService.addNotification("Укажите имя.");
             return;
         }
 
         if (name.length > 100) {
-            setFormInfo({ ok: false, isSended: true, hint: "Имя слишком длинное." });
+            notificationService.addNotification("Имя слишком длинное.");
             return;
         }
 
         if (email === "") {
-            setFormInfo({ ok: false, isSended: true, hint: "Укажите почту." });
+            notificationService.addNotification("Укажите почту.");
             return;
         }
 
         if (password === "") {
-            setFormInfo({ ok: false, isSended: true, hint: "Укажите пароль." });
+            notificationService.addNotification("Укажите пароль.");
             return;
         }
 
-        setFormInfo({ ok: false, isSended: true, hint: null });
+        setLoading(true);
         const response = await registerUser({ name, email, password });
+        setLoading(false);
         
         if (response === undefined) {
-            setFormInfo({ ok: false, isSended: false, hint: "Попробуйте в другой раз." });
+            notificationService.addNotification("Попробуйте в другой раз.");
             return;
         }
 
         if (response.ok) {
-            setFormInfo(
-                {
-                    ok: true,
-                    isSended: false,
-                    hint: "На почту отправлена ссылка. Перейдите по ней для активации аккаунта."
-                }
-            );
+            notificationService.addNotification("На почту отправлена ссылка. Перейдите по ней для активации аккаунта.");
         } else if (response.status === 400) {
-            setFormInfo(
-                {
-                    ok: false,
-                    isSended: false,
-                    hint: "Пароль должен содержать не менее 8 символов, включая цифры и буквы."
-                }
-            );
+            notificationService.addNotification("Пароль должен содержать не менее 8 символов, включая цифры и буквы.");
         } else if (response.status === 409) {
-            setFormInfo(
-                {
-                    ok: false,
-                    isSended: false,
-                    hint: "Аккаунт с этой почтой существует."
-                }
-            );
+            notificationService.addNotification("Аккаунт с этой почтой существует.");
         }
     }
 
     return (
-        <>
-            <form className="Centered Box" onSubmit={onSubmit}>
-                <div className="List Mid">
-                    <h1>Регистрация</h1>
-
-                    <TextField placeholder="Имя" text={ name } setText={ setName } />
-                    <TextField placeholder="Почта" text={ email } setText={ setEmail } />
-                    <PasswordField placeholder="Пароль" text={ password } setText={ setPassword } />
-                    <div>
-                        <SubmitButton isLoading={ formInfo.isSended } title="Создать" />
-                    </div>
-                    <hr/>
-                    <Link to="/login">Войти в аккаунт</Link>
-                </div>
-            </form>
-
-            {
-                formInfo.hint && <Notification message={ formInfo.hint } isError={ !(formInfo.ok) } />
-            }
-        </>
-    )
-}
+        <form className="Centered box r-lg p-lg w-md" onSubmit={ onSubmit }>
+            <div className="v gap-md ta-center">
+                <h1>Регистрация</h1>
+                <p className="ta-center mg-md">
+                    Создайте аккаунт, указав имя, почту и пароль.
+                    Если у вас уже есть аккаунт, вы можете авторизоваться <Link to="/login">здесь</Link>.
+                </p>
+                <TextField placeholder="Имя" text={ name } setText={ setName } />
+                <TextField placeholder="Почта" text={ email } setText={ setEmail } />
+                <TextField placeholder="Пароль" type="password" text={ password } setText={ setPassword } />
+                <Button loading={ loading }>Создать</Button>
+            </div>
+        </form>
+    );
+};
 
 
 export default RegisterPage;

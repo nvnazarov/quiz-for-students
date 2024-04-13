@@ -1,5 +1,5 @@
 import SideNavigationFragment from "../components/fragments/SideNavigationFragment";
-import TestConstructorFragment from "../components/fragments/constructor/TestConstructorFragment";
+import TestConstructor from "../components/TestConstructor";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const TestConstructorPage = () => {
     ];
 
     const fragments = [
-        <TestConstructorFragment />
+        <TestConstructor />
     ];
 
     const onCategorySelect = (index) => {

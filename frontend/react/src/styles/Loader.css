@@ -1,0 +1,14 @@
+.loader {
+    display: inline-block;
+    border: 0.1rem solid rgb(245, 235, 206);
+    border-top: 0.1rem solid rgb(166, 138, 55);
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

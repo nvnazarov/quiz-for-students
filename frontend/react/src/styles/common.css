@@ -1,0 +1,117 @@
+* {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    margin: 0px;
+    padding: 0px;
+}
+
+h1 {
+    color: #333;
+    font-size: 1.5rem;
+}
+
+p {
+    color: #aaa;
+}
+
+.ta-center {
+    text-align: center;
+}
+
+input {
+    outline: none;
+    border: none;
+}
+
+button {
+    outline: none;
+    border: none;
+}
+
+body {
+    background-color: #f2f2f3;
+}
+
+.gap-small {
+    gap: 0.5rem;
+}
+
+.vert {
+    display: flex;
+    flex-direction: column;
+}
+
+.p-md {
+    padding: 1rem;
+}
+
+.p-lg {
+    padding: 2rem;
+}
+
+.r-sm {
+    border-radius: 0.5rem;
+}
+
+.r-md {
+    border-radius: 1rem;
+}
+
+.r-lg {
+    border-radius: 1.5rem;
+}
+
+.mg-md {
+    margin: 1rem;
+}
+
+.w-md {
+    width: 20rem;
+}
+
+.box {
+    background-color: white;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.bg-gray {
+    background-color: #f3f3f5;
+}
+
+.bg-orange {
+    color: rgb(166, 138, 55);
+    background-color: rgb(245, 235, 206);
+}
+
+
+/* */
+
+.btn {
+    transition-duration: 0.1s;
+}
+
+.btn:hover {
+    transform: scale(1.04);
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.sh {
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+}
+
+/* Layout. */
+
+.v {
+    display: flex;
+    flex-direction: column;
+}
+
+.gap-md {
+    gap: 1rem;
+}

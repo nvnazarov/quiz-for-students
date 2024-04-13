@@ -20,7 +20,9 @@ class QuizService:
 
 
     async def create_test(self, user_id: int, data: QuizDataDto) -> QuizDto:
-        # TODO: check data consistency
+        questions = data.data["q"]
+        for q in questions:
+            print(q["data"]["image"])
         
         try:
             test_create = QuizCreateDto(name=data.name,

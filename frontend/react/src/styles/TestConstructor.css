@@ -1,0 +1,165 @@
+.tc-page {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: white;
+    height: 100vh;
+}
+
+.tc-container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow-y: scroll;
+}
+
+.tc-q-container {
+    width: 700px;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+.tc-header {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.tc-header-title {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tc-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
+
+.tc-tags-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.tc-tag {
+    padding: 0.1rem 1ch;
+    border-radius: 0.6rem;
+    border: 1px solid rgb(182, 51, 51);
+    color: rgb(130, 0, 0);
+    background-color: rgb(255, 150, 150);
+}
+
+.tc-button {
+    padding: 0.1rem 1ch;
+    border-radius: 0.6rem;
+    border: 1px solid rgb(155, 155, 155);
+    color: rgb(0, 0, 0);
+    background-color: rgb(229, 229, 229);
+}
+
+.tc-buttons-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.tc-type {
+    min-width: fit-content;
+}
+
+.tc-title-input {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 2px dashed #ccc;
+    text-align: center;
+    text-wrap: wrap;
+    outline: none;
+    resize: vertical;
+}
+
+.tc-title-input::placeholder {
+    color: #aaa;
+}
+
+.tc-answers-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 2rem;
+}
+
+.tc-hint-text {
+    text-align: center;
+    color: #aaa;
+}
+
+.tc-add-answer-btn {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 2px dashed #ccc;
+    text-align: center;
+    background-color: #eee;
+    width: calc(100% - 3.6rem);
+}
+
+.tc-answer-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tc-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    opacity: 0.4;
+    transition-duration: 0.2s;
+}
+
+.tc-icon:hover {
+    opacity: 0.6;
+    transform: scale(1.1);
+}
+
+.tc-icon-selected {
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+.tc-icon-not-selected {
+    width: 1.3rem;
+    height: 1.3rem;
+    opacity: 0.4;
+}
+
+.tc-icon-not-selected:hover {
+    opacity: 0.6;
+}
+
+.tc-input-selected {
+    color: rgb(46, 115, 46);
+    background-color: rgb(164, 221, 164);
+    border: 2px solid rgb(46, 115, 46);
+}
+
+.tc-input-selected::placeholder {
+    color: rgb(97, 178, 97);
+}
+
+.tc-params-container {
+    display: grid;
+    grid-template-columns: 20ch 1fr;
+    gap: 0.5em;
+    align-items: center;
+}
+
+.tc-types-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}

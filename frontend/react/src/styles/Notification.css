@@ -1,0 +1,32 @@
+.notification {
+    position: absolute;
+    margin-left: 50%;
+    transform: translate(-50%, -100%);
+    top: 0px;
+    opacity: 0;
+    border-radius: 5px;
+    background-color: #faa;
+    color: #922;
+    padding: 5px 10px;
+    animation-duration: 7.5s;
+    animation-name: notification;
+}
+
+@keyframes notification {
+    0% {
+        top: 0px;
+        opacity: 0;
+    }
+    10% {
+        top: 50px;
+        opacity: 1;
+    }
+    90% {
+        top: 50px;
+        opacity: 1;
+    }
+    100% {
+        top: 0px;
+        opacity: 0;
+    }
+}
