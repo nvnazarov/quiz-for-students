@@ -32,13 +32,15 @@ body {
     background-color: #f2f2f3;
 }
 
-.gap-small {
-    gap: 0.5rem;
+.center {
+    position: absolute;
+    margin-top: 50vh;
+    margin-left: 50vw;
+    transform: translate(-50%, -50%);
 }
 
-.vert {
-    display: flex;
-    flex-direction: column;
+.p-sm {
+    padding: 0.5rem;
 }
 
 .p-md {
@@ -65,8 +67,21 @@ body {
     margin: 1rem;
 }
 
+.mg-v-md {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.mg-t-md {
+    margin-top: 1rem;
+}
+
 .w-md {
     width: 20rem;
+}
+
+.w-lg {
+    width: 50rem;
 }
 
 .box {
@@ -86,6 +101,10 @@ body {
     background-color: rgb(245, 235, 206);
 }
 
+.blue {
+    color: rgb(55, 75, 166);
+    background-color: rgb(213, 215, 237);
+}
 
 /* */
 
@@ -102,7 +121,7 @@ body {
 }
 
 .sh {
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 /* Layout. */
@@ -112,6 +131,106 @@ body {
     flex-direction: column;
 }
 
+.h {
+    display: flex;
+    flex-direction: row;
+}
+
+.gap-sm {
+    gap: 0.5rem;
+}
+
 .gap-md {
     gap: 1rem;
+}
+
+.gap-lg {
+    gap: 1.5rem;
+}
+
+.h-full {
+    height: 100vh;
+}
+
+.wrap {
+    flex-wrap: wrap;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.min-w-fit-content {
+    min-width: fit-content;
+}
+
+.end {
+    justify-content: end;
+}
+
+.c-gray {
+    color: #333;
+}
+
+.ai-center {
+    align-items: center;
+}
+
+.bounce {
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out;
+}
+
+.bounce:hover {
+    transform: scale(1.04);
+}
+
+.bounce:active {
+    transform: scale(0.96);
+}
+
+.v-center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.icon-md {
+    opacity: 0.15;
+    width: 1rem;
+    height: 1rem;
+}
+
+.icon-lg {
+    opacity: 0.15;
+    width: 2rem;
+    height: 2rem;
+}
+
+.btn-sm {
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    color: #555;
+    background-color: #f3f3f5;
+    transition-duration: 0.2s;
+}
+
+.btn-sm:hover {
+    background-color: #e5e5e7;
+}
+
+.btn-sm:active {
+    transform: scale(0.96);
+}
+
+.overflow-ellipsis {
+    text-overflow: ellipsis;
+}
+
+.white-space-nowrap {
+    white-space: nowrap;
+}
+
+.overflow-hidden {
+    overflow: hidden;
 }

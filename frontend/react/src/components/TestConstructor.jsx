@@ -3,7 +3,9 @@ import { useSearchParams } from "react-router-dom";
 
 import { createTest, updateTest, getQuizData } from "../api/quiz";
 import { UserContext } from "../contexts/UserContext";
-import SubmitButton from "./SubmitButton";
+import { NotificationContext, NotificationType } from "../contexts/NotificationContext";
+import TextField from "./TextField";
+import Button from "./Button";
 import "../styles/TestConstructor.css";
 import "../styles/common.css";
 
@@ -70,11 +72,11 @@ const SingleAnswer = ({ data, setData, onDelete }) => {
                 };
 
                 return (
-                    <div key={ index } className="tc-answer-container">
+                    <div key={ index } className="h gap-sm ai-center">
                         {
                             index === data.correct ?
-                            <input placeholder="Укажите ответ" className="tc-input-selected" value={ answer } onChange={ onChange } /> :
-                            <input placeholder="Укажите ответ" value={ answer } onChange={ onChange } />
+                            <input placeholder="Укажите ответ" className="tc-input-selected p-sm r-sm" value={ answer } onChange={ onChange } /> :
+                            <input placeholder="Укажите ответ" className="tc-input p-sm r-sm" value={ answer } onChange={ onChange } />
                         }
                         {
                             index === data.correct ?
@@ -88,43 +90,44 @@ const SingleAnswer = ({ data, setData, onDelete }) => {
         );
 
         return (
-            <div className="tc-q-container">
-                <div className="gap-small vert">
+            <div className="r-md p-md sh bg-white w-lg">
+                <div className="v gap-lg">
                     <div className="tc-params-container">
-                        Время (сек):
-                        <input type="number" value={ data.time } onChange={ updateTime } />
-                        Очки:
-                        <input type="number" value={ data.points } onChange={ updatePoints } />
+                        <p>Время (сек):</p>
+                        <input type="number" className="bg-gray r-sm p-sm" value={ data.time } onChange={ updateTime } />
+                        <p>Очки:</p>
+                        <input type="number" className="bg-gray r-sm p-sm" value={ data.points } onChange={ updatePoints } />
                     </div>
                     <textarea className="tc-title-input" placeholder="Введите вопрос" value={ data.title } onChange={ updateTitle } />
-                    <div className="tc-hint-text">Укажите варианты ответов</div>
                     <div className="tc-answers-container">
                         { answersElements }
                         <button className="tc-add-answer-btn" onClick={ onAddAnswer }>+ Вариант ответа</button>
                     </div>
                 </div>
-                <div className="tc-footer">
-                    <button className="tc-button" onClick={ () => setExpanded(false) }>Ок</button>
-                    <button className="tc-button" onClick={ onDelete }>Удалить</button>
+                <div className="h end gap-sm mg-t-md">
+                    <button className="btn-sm" onClick={ () => setExpanded(false) }>Ок</button>
+                    <button className="btn-sm" onClick={ onDelete }>Удалить</button>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="tc-q-container">
-            <div className="tc-header">
-                <div className="tc-header-title">{ data.title === "" ? "[Вопрос не указан]" : data.title }</div>
-                <div className="tc-type">| один ответ</div>
-            </div>
-            <div className="tc-footer">
-                <div className="tc-tags-container">
-                    <div className="tc-tag">{ data.points } очков</div>
-                    <div className="tc-tag">{ data.time } секунд</div>
+        <div className="r-md p-md sh bg-white w-lg">
+            <div className="h gap-sm">
+                <div className="overflow-hidden overflow-ellipsis white-space-nowrap">
+                    { data.title === "" ? "[Вопрос не указан]" : data.title }
                 </div>
-                <div className="tc-buttons-container">
-                    <button className="tc-button" onClick={ () => setExpanded(true) }>Настроить</button>
-                    <button className="tc-button" onClick={ onDelete }>Удалить</button>
+                <div className="min-w-fit-content">| один ответ</div>
+            </div>
+            <div className="h space-between mg-t-md">
+                <div className="h gap-sm">
+                    <div className="blue p-sm r-sm">{ data.points } очков</div>
+                    <div className="blue p-sm r-sm">{ data.time } секунд</div>
+                </div>
+                <div className="h gap-sm">
+                    <button className="btn-sm" onClick={ () => setExpanded(true) }>Настроить</button>
+                    <button className="btn-sm" onClick={ onDelete }>Удалить</button>
                 </div>
             </div>
         </div>
@@ -175,11 +178,11 @@ const MultipleAnswer = ({ data, setData, onDelete }) => {
                 };
 
                 return (
-                    <div key={ index } className="tc-answer-container">
+                    <div key={ index } className="h gap-sm ai-center">
                         {
                             data.correct.includes(index) ?
-                            <input placeholder="Укажите ответ" className="tc-input-selected" value={ answer } onChange={ onChange } /> :
-                            <input placeholder="Укажите ответ" value={ answer } onChange={ onChange } />
+                            <input placeholder="Укажите ответ" className="tc-input-selected p-sm r-sm" value={ answer } onChange={ onChange } /> :
+                            <input placeholder="Укажите ответ" className="tc-input p-sm r-sm" value={ answer } onChange={ onChange } />
                         }
                         {
                             data.correct.includes(index) ?
@@ -193,43 +196,44 @@ const MultipleAnswer = ({ data, setData, onDelete }) => {
         );
 
         return (
-            <div className="tc-q-container">
-                <div className="gap-small vert">
+            <div className="r-md p-md sh bg-white w-lg">
+                <div className="v gap-lg">
                     <div className="tc-params-container">
-                        Время (сек):
-                        <input type="number" value={ data.time } onChange={ updateTime } />
-                        Очки:
-                        <input type="number" value={ data.points } onChange={ updatePoints } />
+                        <p>Время (сек):</p>
+                        <input type="number" className="bg-gray r-sm p-sm" value={ data.time } onChange={ updateTime } />
+                        <p>Очки:</p>
+                        <input type="number" className="bg-gray r-sm p-sm" value={ data.points } onChange={ updatePoints } />
                     </div>
                     <textarea className="tc-title-input" placeholder="Введите вопрос" value={ data.title } onChange={ updateTitle } />
-                    <div className="tc-hint-text">Укажите варианты ответов</div>
                     <div className="tc-answers-container">
                         { answersElements }
                         <button className="tc-add-answer-btn" onClick={ onAddAnswer }>+ Вариант ответа</button>
                     </div>
                 </div>
-                <div className="tc-footer">
-                    <button className="tc-button" onClick={ () => setExpanded(false) }>Ок</button>
-                    <button className="tc-button" onClick={ onDelete }>Удалить</button>
+                <div className="h end gap-sm mg-t-md">
+                    <button className="btn-sm" onClick={ () => setExpanded(false) }>Ок</button>
+                    <button className="btn-sm" onClick={ onDelete }>Удалить</button>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="tc-q-container">
-            <div className="tc-header">
-                <div className="tc-header-title">{ data.title === "" ? "[Вопрос не указан]" : data.title }</div>
-                <div className="tc-type">| несколько ответов</div>
-            </div>
-            <div className="tc-footer">
-                <div className="tc-tags-container">
-                    <div className="tc-tag">{ data.points } очков</div>
-                    <div className="tc-tag">{ data.time } секунд</div>
+        <div className="r-md p-md sh bg-white w-lg">
+            <div className="h gap-sm">
+                <div className="overflow-hidden overflow-ellipsis white-space-nowrap">
+                    { data.title === "" ? "[Вопрос не указан]" : data.title }
                 </div>
-                <div className="tc-buttons-container">
-                    <button className="tc-button" onClick={ () => setExpanded(true) }>Настроить</button>
-                    <button className="tc-button" onClick={ onDelete }>Удалить</button>
+                <div className="min-w-fit-content">| несколько ответов</div>
+            </div>
+            <div className="h space-between mg-t-md">
+                <div className="h gap-sm">
+                    <div className="blue p-sm r-sm">{ data.points } очков</div>
+                    <div className="blue p-sm r-sm">{ data.time } секунд</div>
+                </div>
+                <div className="h gap-sm">
+                    <button className="btn-sm" onClick={ () => setExpanded(true) }>Настроить</button>
+                    <button className="btn-sm" onClick={ onDelete }>Удалить</button>
                 </div>
             </div>
         </div>
@@ -239,11 +243,14 @@ const MultipleAnswer = ({ data, setData, onDelete }) => {
 
 const TestConstructor = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [authToken,] = useContext(UserContext);
+    const notificationService = useContext(NotificationContext);
+    const [authToken] = useContext(UserContext);
     const [testName, setTestName] = useState("");
     const [questions, setQuestions] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    const testId = +searchParams.get("id"); 
+    const param = searchParams.get("id");
+    const testId = param ? +param : undefined;
     useEffect(() => {
         if (!testId) {
             return;
@@ -257,7 +264,7 @@ const TestConstructor = () => {
             const response = await getQuizData(params);
             
             if (response === undefined || !response.ok) {
-                console.log(response);
+                notificationService.addNotification("Не удалось загрузить данные квиза.");
             } else {
                 const data = await response.json();
                 setQuestions(data.q);
@@ -267,7 +274,6 @@ const TestConstructor = () => {
         loadQuestions();
     }, [testId]);
 
-    const updateTestName = (e) => setTestName(e.target.value);
     const addSingleAnswerQuestion = () => setQuestions([...questions, defaultSingleAnswerQuestion]);
     const addMultipleAnswerQuestion = () => setQuestions([...questions, defaultMultipleAnswerQuestion]);
 
@@ -279,13 +285,16 @@ const TestConstructor = () => {
                 q: questions,
             },
         };
+        setLoading(true);
         const response = await createTest(createParams);
+        setLoading(false);
 
         if (response === undefined || !response.ok) {
-            console.log(response);
+            notificationService.addNotification("Не удалось создать квиз.");
         } else {
             const createdTest = await response.json();
             setSearchParams({ id: createdTest.id });
+            notificationService.addNotification("Успешно.", NotificationType.Success);
         }
     };
 
@@ -297,17 +306,23 @@ const TestConstructor = () => {
                 q: questions,
             }
         };
+        setLoading(true);
         const response = await updateTest(updateParams);
+        setLoading(false);
 
         if (response === undefined || !response.ok) {
-            console.log(response);
+            notificationService.addNotification("Не удалось обновить квиз.");
         } else {
-            // Todo
+            notificationService.addNotification("Успешно.", NotificationType.Success);
         }
     };
 
     const onSubmit = (e) => {
         e.preventDefault();
+
+        if (loading) {
+            return;
+        }
         
         if (testId) {
             onUpdateTest();
@@ -343,17 +358,17 @@ const TestConstructor = () => {
     ); 
 
     return (
-        <div className="tc-page">
-            <h1>Конструктор</h1>
-            <div className="tc-types-container">
-                <button type="button" onClick={ addSingleAnswerQuestion }>+ один ответ</button>
-                <button type="button" onClick={ addMultipleAnswerQuestion }>+ несколько ответов</button>
-            </div>
-            <form onSubmit={ onSubmit }>
-                <input placeholder="Название квиза" value={ testName } onChange={ updateTestName } />
-                <button type="submit">Сохранить</button>
+        <div className="h-full bg-white p-lg">
+            <h1>Конструктор { testId !== undefined && "- редактирование" }</h1>
+            <form className="h mg-v-md gap-md" onSubmit={ onSubmit }>
+                { testId === undefined && <TextField placeholder="Название квиза" text={ testName } setText={ setTestName } /> }
+                <Button loading={ loading }>{ testId !== undefined ? "Сохранить изменения" : "Сохранить" }</Button>
             </form>
-            <div className="tc-container">{ questionsElements }</div>
+            <div className="h mg-v-md gap-md">
+                <button type="button" className="btn-sm" onClick={ addSingleAnswerQuestion }>+ один ответ</button>
+                <button type="button" className="btn-sm" onClick={ addMultipleAnswerQuestion }>+ несколько ответов</button>
+            </div>
+            <div className="v gap-md">{ questionsElements }</div>
         </div>
     );
 };

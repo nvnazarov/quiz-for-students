@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import HTTPException, status
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DBAPIError
 
 from app.dto.quiz import QuizUpdateDto
 from app.dto.quiz import QuizDataDto
@@ -32,6 +32,9 @@ class QuizService:
         except IntegrityError:
             raise HTTPException(status.HTTP_400_BAD_REQUEST,
                                 "Name is occupied")
+        except DBAPIError:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                                "Name is too long")
         
         return to_quiz_dto(db_quiz)
 

@@ -1,28 +1,60 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 
+import { UserContext } from "../../../contexts/UserContext";
+import { useQuizzes } from "../../../hooks/hooks";
+import Loader from "../../Loader";
+import "../../../styles/common.css";
 
-// <a href="https://www.flaticon.com/free-icons/quiz" title="quiz icons">Quiz icons created by Freepik - Flaticon</a>
-const QuizzesFragment = ({ quizzes }) => {
-    const quizMapper = (quiz) => (
-        <Link to={ `/constructor/${quiz.type}?id=${quiz.id}` } key={ quiz.id } className="Card">
-            <div className="Horizontal GapMid VerticalCentered">
-                <img src={ `/${quiz.type}Icon.png` } className="Icon"></img> { quiz.name }
+
+const QuizCard = ({ quiz }) => {
+    return (
+        <Link to={ `/constructor/${quiz.type}?id=${quiz.id}` } className="c-gray p-md r-md bg-gray w-md bounce v-center">
+            <div className="h gap-md ai-center">
+                <img src={ `/${quiz.type}.png` } className="icon-lg"></img> { quiz.name === "" ? "[Без названия]" : quiz.name }
             </div>
         </Link>
     );
+};
 
-    const quizzesElements = (quizzes === undefined) ? <p>Не удалось загрузить квизы</p> : quizzes.map(quizMapper);
+
+const QuizzesFragment = () => {
+    const [authToken] = useContext(UserContext);
+    const [quizzes] = useQuizzes(authToken);
+
+    if (quizzes === null) {
+        return (
+            <div className="h-full bg-white p-lg">
+                <h1>Квизы</h1>
+                
+                <div className="mg-v-md">
+                    <Loader />
+                </div>
+            </div>
+        );
+    }
+
+    if (quizzes === undefined) {
+        return (
+            <div className="h-full bg-white p-lg">
+                <h1>Квизы</h1>
+                
+                <p className="mg-v-md">Не удалось загрузить квизы.</p>
+            </div>
+        );
+    }
+
+    const quizzesElements = quizzes.map(q => <QuizCard key={ q.id } quiz = { q }/>);
 
     return (
-        <div className="Page">
+        <div className="h-full bg-white p-lg">
             <h1>Квизы</h1>
 
-            <div className="Horizontal GapSmall VerticalMargin">
-                <Link to="/constructor/test" className="Button">Создать квиз</Link>
-                <Link to="/constructor/quiz" className="Button">Создать викторину</Link>
-            </div>
+            <p className="mg-v-md">
+                Создайте <Link to="/constructor/test">квиз</Link> или <Link to="/constructor/quiz">викторину</Link>.
+            </p>
 
-            <div className="Grid">
+            <div className="h gap-md wrap">
                 { quizzesElements }
             </div>
         </div>

@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DBAPIError
 
 from app.security.token import TokenContext
 from app.repos.group import GroupRepository
@@ -38,6 +38,9 @@ class GroupService:
             # will occur, but it is not that group exists, it is that user does
             # not exist.
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="group exists")
+        except DBAPIError:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, "Group name is too long")
+        
         return to_group_dto(db_group)
 
 

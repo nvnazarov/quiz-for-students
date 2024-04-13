@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { registerUser } from "../api/user.js";
-import { NotificationContext } from "../contexts/NotificationContext";
+import { NotificationContext, NotificationType } from "../contexts/NotificationContext";
 import Button from "../components/Button";
 import TextField from "../components/TextField";
 
@@ -51,7 +51,8 @@ const RegisterPage = () => {
         }
 
         if (response.ok) {
-            notificationService.addNotification("На почту отправлена ссылка. Перейдите по ней для активации аккаунта.");
+            notificationService.addNotification(
+                "На почту отправлена ссылка. Перейдите по ней для активации аккаунта.", NotificationType.Success);
         } else if (response.status === 400) {
             notificationService.addNotification("Пароль должен содержать не менее 8 символов, включая цифры и буквы.");
         } else if (response.status === 409) {
@@ -60,7 +61,7 @@ const RegisterPage = () => {
     }
 
     return (
-        <form className="Centered box r-lg p-lg w-md" onSubmit={ onSubmit }>
+        <form className="center box r-lg p-lg w-md" onSubmit={ onSubmit }>
             <div className="v gap-md ta-center">
                 <h1>Регистрация</h1>
                 <p className="ta-center mg-md">

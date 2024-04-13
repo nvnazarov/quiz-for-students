@@ -1,11 +1,3 @@
-.tc-page {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    background-color: white;
-    height: 100vh;
-}
-
 .tc-container {
     display: flex;
     height: 100%;
@@ -101,10 +93,20 @@
 .tc-add-answer-btn {
     padding: 0.5rem;
     border-radius: 0.5rem;
+    color: #555;
     border: 2px dashed #ccc;
     text-align: center;
-    background-color: #eee;
+    background-color: #f3f3f5;;
     width: calc(100% - 3.6rem);
+    transition-duration: 0.2s;
+}
+
+.tc-add-answer-btn:hover {
+    background-color: #e5e5e7;
+}
+
+.tc-add-answer-btn:active {
+    transform: scale(0.96);
 }
 
 .tc-answer-container {
@@ -126,6 +128,11 @@
     transform: scale(1.1);
 }
 
+.tc-icon:active {
+    opacity: 0.6;
+    transform: scale(0.96);
+}
+
 .tc-icon-selected {
     width: 1.3rem;
     height: 1.3rem;
@@ -139,6 +146,12 @@
 
 .tc-icon-not-selected:hover {
     opacity: 0.6;
+}
+
+.tc-input {
+    color: #555;
+    background-color: #f3f3f5;
+    border: 2px solid transparent;
 }
 
 .tc-input-selected {

@@ -105,8 +105,6 @@ const GroupAdminPage = () => {
         setMessage({ ok: true, hint: "Успешно." });
     };
 
-    console.log(groupAdminData.results);
-
     const fragments = [
         <GamesAdminFragment
             currentGame={ groupAdminData.currentGame }

@@ -4,12 +4,20 @@
     transform: translate(-50%, -100%);
     top: 0px;
     opacity: 0;
-    border-radius: 5px;
-    background-color: #faa;
-    color: #922;
-    padding: 5px 10px;
+    border-radius: 1rem;
+    padding: 1rem;
     animation-duration: 7.5s;
     animation-name: notification;
+}
+
+.error {
+    background-color: #faa;
+    color: #922;
+}
+
+.success {
+    background-color: rgb(170, 255, 172);
+    color: rgb(42, 153, 34);
 }
 
 @keyframes notification {
@@ -18,11 +26,11 @@
         opacity: 0;
     }
     10% {
-        top: 50px;
+        top: 65px;
         opacity: 1;
     }
     90% {
-        top: 50px;
+        top: 65px;
         opacity: 1;
     }
     100% {

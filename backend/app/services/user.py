@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 from fastapi import HTTPException
 from fastapi import status
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DBAPIError
 
 from app.dto.user import to_user_dto
 from app.dto.user import UserDto
@@ -90,6 +90,9 @@ class UserService:
         except IndexError:
             raise HTTPException(status.HTTP_404_NOT_FOUND,
                                 "User not found")
+        except DBAPIError:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                                "Name is too long")
         
         return to_user_dto(db_user)
 

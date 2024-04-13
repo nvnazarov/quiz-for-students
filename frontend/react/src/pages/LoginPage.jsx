@@ -55,7 +55,7 @@ const LoginPage = () => {
     }
 
     return (
-        <form className="Centered box r-lg p-lg w-md" onSubmit={ onSubmit }>
+        <form className="center box r-lg p-lg w-md" onSubmit={ onSubmit }>
             <div className="v gap-md ta-center">
                 <h1>Авторизация</h1>
                 <p className="mg-md">
