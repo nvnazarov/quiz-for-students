@@ -1,18 +1,13 @@
-import { Navigate, useParams } from "react-router-dom";
-import { useContext, useState } from "react";
-import { UserContext } from "../contexts/UserContext";
+import { Navigate } from "react-router-dom";
+import { useState } from "react";
 import SideNavigationFragment from "../components/fragments/SideNavigationFragment";
 import GamesFragment from "../components/fragments/group/GamesFragment";
 import MembersFragment from "../components/fragments/group/MembersFragment";
 import ChatFragment from "../components/fragments/group/ChatFragment";
-import { useGroupData } from "../hooks/group";
 
 
 const GroupPage = () => {
-    const { id } = useParams();
-    const [token] = useContext(UserContext);
     const [categoryIndex, setCategoryIndex] = useState(0);
-    const groupData = useGroupData(token, id);
 
     const categories = [
         "Игры",
@@ -22,12 +17,8 @@ const GroupPage = () => {
     ];
 
     const fragments = [
-        <GamesFragment
-        currentGame={ groupData.currentGame }
-        results={ groupData.results }
-        members={ groupData.members }
-        quizzes={ groupData.quizzes } />,
-        <MembersFragment members={ groupData.members } />,
+        <GamesFragment />,
+        <MembersFragment />,
         <ChatFragment />
     ];
 

@@ -1,44 +1,41 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../../contexts/UserContext";
-import Notification from "../../ui/Notification";
+import { NotificationContext, NotificationType } from "../../../contexts/NotificationContext";
 import { getAllMessages } from "../../../api/chat";
-import TextField from "../../ui/TextField";
-import SubmitButton from "../../ui/SubmitButton";
+import TextField from "../../TextField";
+import Button from "../../Button";
 
 
 const ChatFragment = () => {
-    const [ token, ] = useContext(UserContext);
-    const { id } = useParams();
-    const [ message, setMessage ] = useState({ ok: false, hint: null });
-    const [ messages, setMessages ] = useState([]);
-    const [ text, setText ] = useState("");
-    const [ socket, setSocket ]  = useState(null);
+    const notificationService = useContext(NotificationContext);
+    const [authToken] = useContext(UserContext);
+    const { groupId } = useParams();
+    const [messages, setMessages] = useState([]);
+    const [text, setText] = useState("");
+    const [socket, setSocket]  = useState(null);
 
     useEffect(() => {
         let ws = null;
 
         const connect = async () => {
-            setMessage({ ok: false, hint: null });
-            const response = await getAllMessages({ authToken: token, groupId: id });
+            const response = await getAllMessages({ authToken, groupId });
 
             if (response === undefined || !response.ok) {
-                setMessage({ ok: false, hint: "Не удалось загрузить историю сообщений" });
+                notificationService.addNotification("Не удалось загрузить историю сообщений");
             } else {
                 const msgs = await response.json();
                 msgs.reverse();
                 setMessages(msgs);
             }
 
-            ws = new WebSocket(`ws://localhost:8000/api/chat/ws/${id}/${token}`);
+            ws = new WebSocket(`ws://localhost:8000/api/chat/ws/${groupId}/${authToken}`);
 
             ws.onmessage = async (e) => {
                 const msg = JSON.parse(e.data);
 
-                console.log(msg);
-
                 if (msg.what) {
-                    setMessage({ ok: false, hint: "Не удалось отправить сообщение." });
+                    notificationService.addNotification("Не удалось отправить сообщение.");
                 } else {
                     setMessages((m) => [ msg, ...m  ]);
                 }
@@ -57,7 +54,7 @@ const ChatFragment = () => {
                 ws.close();
             }
         };
-    }, [id]);
+    }, [groupId]);
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -65,9 +62,9 @@ const ChatFragment = () => {
         if (socket) {
             socket.send(text);
             setText("");
-            setMessage({ ok: true, hint: "Сообщение отправлено." });
+            notificationService.addNotification("Сообщение отправлено.", NotificationType.Success);
         } else {
-            setMessage({ ok: false, hint: "Подождите, пока вас подключит к чату." });
+            notificationService.addNotification("Подождите, пока вас подключит к чату.");
         }
     };
 
@@ -88,20 +85,14 @@ const ChatFragment = () => {
         <div className="Page">
             <h1>Чат</h1>
 
-            <form className="Horizontal GapSmall VerticalMargin" onSubmit={ onSubmit }>
+            <form className="h gap-sm mg-v-md" onSubmit={ onSubmit }>
                 <TextField placeholder="Введите сообщение" text={ text } setText={ setText } />
-                <SubmitButton title="Отправить" />
+                <Button>Отправить</Button>
             </form>
 
-            <div className="Vertical GapSmall">
-            {
-                messagesElements
-            }
+            <div className="v gap-sm">
+                { messagesElements }
             </div>
-            
-            {
-                message.hint && <Notification message={ message.hint } isError={ !message.ok } />
-            }
         </div>
     );
 };

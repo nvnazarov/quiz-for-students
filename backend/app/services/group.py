@@ -167,8 +167,11 @@ class GroupService:
             raise HTTPException(status.HTTP_400_BAD_REQUEST,
                                 "Cannot invite yourself")
         
-        
-        await self._repo.create_invite(db_user.id, group_id)
+        try:
+            await self._repo.create_invite(db_user.id, group_id)
+        except IntegrityError:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                                "User is already invited")
 
 
     async def get_all_invites(self, user_id: int) -> list[InviteDto]:

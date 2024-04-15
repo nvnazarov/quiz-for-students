@@ -72,11 +72,11 @@ const InvitesFragment = () => {
         };
 
         return (
-            <div key={ invite.id } className="bg-gray r-md p-md ta-center">
+            <div key={ invite.id } className="bg-white sh r-md p-md ta-center">
                 <div>{ invite.group_name }</div>
-                <div className="h gap-md">
-                    <button className="bounce bg-orange p-md" onClick={ onJoin }>Присоединиться</button>
-                    <button className="bounce bg-orange p-md" onClick={ onCancel }>Отклонить</button>
+                <div className="h gap-md mg-t-md">
+                    <button className="btn-sm" onClick={ onJoin }>Присоединиться</button>
+                    <button className="btn-sm" onClick={ onCancel }>Отклонить</button>
                 </div>
             </div>
         );

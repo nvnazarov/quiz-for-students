@@ -23,6 +23,11 @@ input {
     border: none;
 }
 
+select {
+    outline: none;
+    border: none;
+}
+
 button {
     outline: none;
     border: none;
@@ -99,6 +104,14 @@ body {
 .bg-orange {
     color: rgb(166, 138, 55);
     background-color: rgb(245, 235, 206);
+}
+
+.bg-red {
+    background-color: #f2bebe;
+}
+
+.bg-transparent {
+    background-color: transparent;
 }
 
 .blue {
@@ -233,4 +246,20 @@ body {
 
 .overflow-hidden {
     overflow: hidden;
+}
+
+.db {
+    display: block;
+}
+
+.qz-cell {
+    transition-duration: 0.2s;
+}
+
+.qz-cell:hover {
+    opacity: 0.5;
+}
+
+.qz-cell:active {
+    transform: scale(0.94);
 }

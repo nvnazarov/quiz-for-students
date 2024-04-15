@@ -261,17 +261,6 @@ h2 {
     padding: 0.4rem 1rem;
 }
 
-select {
-    border-radius: 0.5rem;
-    color: black;
-    background-color: white;
-    border: 2px solid #ccc;
-    padding: 0.4rem 1rem;
-}
-select:hover {
-    box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
-}
-
 .NameEmailBox {
     margin-top: 1rem;
     max-width: fit-content;

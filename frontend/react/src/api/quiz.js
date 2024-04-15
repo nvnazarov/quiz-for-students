@@ -1,8 +1,21 @@
 import { apiUrl } from "./config";
 
 
-const createQuiz = () => {
-
+const createQuiz = async ({ authToken, name, data }) => {
+    const body = {
+        name,
+        data,
+    };
+    const requestParams = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            token: authToken,
+        },
+        body: JSON.stringify(body),
+    };
+    const response = await fetch(`${apiUrl}/quizzes/create/quiz`, requestParams).catch(() => undefined);
+    return response;
 };
 
 
@@ -24,8 +37,21 @@ const createTest = async ({ authToken, name, data }) => {
 };
 
 
-const updateQuiz = () => {
-
+const updateQuiz = async ({ authToken, id, data }) => {
+    const body = {
+        id,
+        data,
+    };
+    const requestParams = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            token: authToken,
+        },
+        body: JSON.stringify(body),
+    };
+    const response = await fetch(`${apiUrl}/quizzes/update/quiz`, requestParams).catch(() => undefined);
+    return response;
 };
 
 

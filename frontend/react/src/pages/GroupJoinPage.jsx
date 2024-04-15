@@ -1,19 +1,20 @@
 import { Link, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import Loader from "../components/ui/Loader";
+import Loader from "../components/Loader";
 import { joinGroup } from "../api/group";
+import "../styles/common.css";
 
 
 const GroupJoinPage = () => {
-    const [ token, ] = useContext(UserContext);
+    const [authToken] = useContext(UserContext);
     const { groupToken } = useParams();
     const [status, setStatus] = useState(undefined);
 
     const onJoinGroup = async () => {
         const data = {
-            authToken: token,
-            groupToken: groupToken,  
+            authToken,
+            groupToken,  
         };
         const response = await joinGroup(data);
         
@@ -27,38 +28,43 @@ const GroupJoinPage = () => {
     useEffect(() => { onJoinGroup(); }, []);
 
     return (
-        <div className="Centered Box">
+        <div className="center bg-white r-lg p-lg w-md">
             <div className="List">
                 <h1>Вступление в группу</h1>
                 {
                     status === undefined ?
-                    <div className="Mid">
+                    <div className="ta-center">
                         <Loader />
                     </div>
                     : status === 500 ?
                     <>
-                        <p>Попробуйте в другой раз.</p>
-                        <Link className="Button" to="/me/groups">Посмотреть группы</Link>
+                        <p className="ta-center">Попробуйте в другой раз.</p>
+                        <Link className="btn-sm ta-center" to="/me/groups">Посмотреть группы</Link>
                     </>
                     : status === 406 ?
                     <>
-                        <p>Это Ваша группа.</p>
-                        <Link className="Button" to="/me/groups">Посмотреть группы</Link>
+                        <p className="ta-center">Это Ваша группа.</p>
+                        <Link className="btn-sm ta-center" to="/me/groups">Посмотреть группы</Link>
                     </>
                     : status === 404 ?
                     <>
-                        <p>Группа не существует.</p>
-                        <Link className="Button" to="/me/groups">Посмотреть группы</Link>
+                        <p className="ta-center">Группа не существует.</p>
+                        <Link className="btn-sm ta-center" to="/me/groups">Посмотреть группы</Link>
                     </>
                     : status === 401 ?
                     <>
-                        <p>Вы неавторизованы.</p>
-                        <Link className="Button" to="/login">Авторизоваться</Link>
+                        <p className="ta-center">Вы неавторизованы.</p>
+                        <Link className="btn-sm ta-center" to="/login">Авторизоваться</Link>
                     </>
-                    : 
+                    : status === 400 ?
                     <>
-                        <p>Вы присоединились к группе.</p>
-                        <Link className="Button" to="/profile">Посмотреть группы</Link>
+                        <p className="ta-center">Токен истек или неисправен.</p>
+                        <Link className="btn-sm ta-center" to="/profile">Посмотреть группы</Link>
+                    </>
+                    :
+                    <>
+                        <p className="ta-center">Вы присоединились к группе.</p>
+                        <Link className="btn-sm ta-center" to="/profile">Посмотреть группы</Link>
                     </>
                 }
             </div> 
